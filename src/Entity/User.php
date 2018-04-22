@@ -5,14 +5,15 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-//use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User implements UserInterface, \Serializable
+class User implements AdvancedUserInterface, \Serializable
+//class User implements AdvancedUserInterface, \Serializable
 {
     /**
      * @ORM\Id()
@@ -320,6 +321,7 @@ class User implements UserInterface, \Serializable
             $this->id,
             $this->username,
             $this->password,
+            $this->active,
             // see section on salt below
             // $this->salt,
         ));
@@ -332,6 +334,7 @@ class User implements UserInterface, \Serializable
             $this->id,
             $this->username,
             $this->password,
+            $this->active,
             // see section on salt below
             // $this->salt
             ) = unserialize($serialized, ['allowed_classes' => false]);
@@ -344,7 +347,7 @@ class User implements UserInterface, \Serializable
 
     public function isAccountNonLocked()
     {
-        return ($this->nb_failed_connexion <=3);
+        return ($this->nb_failed_connexion <= 3);
     }
 
     public function isCredentialsNonExpired()
@@ -356,4 +359,6 @@ class User implements UserInterface, \Serializable
     {
         return $this->active;
     }
+
+
 }
