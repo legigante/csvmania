@@ -1,44 +1,39 @@
 <?php
 namespace App\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+
 use Symfony\Component\HttpFoundation\Response;
+
+use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class SecurityController extends Controller
 {
 
     /**
-     * @Route("/")
-     * @return Response
-     */
-    public function index (AuthorizationCheckerInterface $authChecker)
-    {
-
-        if ($authChecker->isGranted('ROLE_ADMIN')) {
-            return $this->redirectToRoute('admin/tasks');
-        }elseif ($authChecker->isGranted('ROLE_USER')) {
-            return $this->redirectToRoute('tasks');
-        }else{
-            return $this->redirectToRoute('login');
-        }
-    }
-
-    /**
      * @Method("get")
      * @Route("/login", name="login")
+     * @param AuthenticationUtils $authenticationUtils
+     * @param AuthorizationCheckerInterface $authChecker
+     * @return Response
      */
-    public function loginAction(AuthenticationUtils $authenticationUtils)
+    public function loginAction(AuthorizationCheckerInterface $authChecker, AuthenticationUtils $authenticationUtils)
     {
+        // si déjà authentifié => home
+        if ($authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return $this->redirectToRoute('home');
+        }
+
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
-
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
+        // formulaire de connexion
         return $this->render('security/login.html.twig', array(
             'last_username' => $lastUsername,
             'error'         => $error,

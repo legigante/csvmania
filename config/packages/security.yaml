@@ -27,7 +27,7 @@ security:
                 remember_me: true
                 login_path: login
                 check_path: login_check
-                default_target_path: tasks
+                default_target_path: home
 
             logout:
                 path: /logout

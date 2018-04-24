@@ -1,0 +1,52 @@
+// variables bootstrap
+
+
+
+// chemin fonts
+$icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
+$fa-font-path: "~font-awesome/fonts";
+
+
+
+// imports
+@import '~bootstrap-sass/assets/stylesheets/bootstrap';
+@import "~font-awesome/scss/font-awesome.scss";
+
+
+
+
+nav{
+  width: 100%;
+  position: fixed;
+  top: 0;
+  background-color: black;
+  color: white;
+  border-bottom: 1px solid white !important;
+}
+nav .navbar-toggle{
+  margin: 0;
+  line-height: 0;
+  font-size: 250%;
+}
+
+
+
+
+footer {
+  position: fixed;
+  bottom: 0;
+  height: 30px;
+  line-height: 30px;
+  width: 100%;
+  background-color: black;
+  color: white;
+  border-top: 1px solid white;
+}
+footer p{
+  margin: 0 60px;
+}
+footer a,
+nav a{
+  color: white;
+  text-decoration: none;
+}
