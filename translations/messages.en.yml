@@ -1,0 +1,24 @@
+app:
+    title: CSV Mania
+    version: 0.1
+
+menu:
+    about: About
+    welcome: Home
+    language: Languages
+
+login:
+    change_pwd: Change password
+    log_in: Log in
+    log_out: Log out
+    password: Password
+    remember_me: Remember me
+    see_profil: See profil
+    title: Connexion
+    username: Username
+
+admin:
+    a: a
+
+tasks:
+    a: a
