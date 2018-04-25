@@ -5,6 +5,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Cookie;
 
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -39,6 +40,7 @@ class MenuController extends Controller
     {
         echo $request->getLocale();
         echo $this->get('session')->get('_locale');
+
         exit();
         return $this->render('app/about.html.twig');
     }
@@ -51,7 +53,17 @@ class MenuController extends Controller
      */
     public function language ($code)
     {
+        // session serveur
         $this->get('session')->set('_locale', $code);
-        return $this->redirectToRoute('home');
+
+        // cookie client
+        $response = new Response('',307);
+        $response->headers->setCookie(new Cookie('locale', $code, strtotime('now + 60 minutes')));
+        $response->headers->set('location','/login');
+        //$response->isRedirect('/login');
+        return $response;
+
+        // redirection
+        //return $this->redirectToRoute('home');
     }
 }

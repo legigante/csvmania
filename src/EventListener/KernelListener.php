@@ -20,9 +20,16 @@ class KernelListener
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
-        // sticky locale
+        // get request
         $request = $event->getRequest();
-        $locale = $request->getSession()->get('_locale', 'en');
+
+        // si locale dans cookie on prend, si dans session on prend, sinon c'est en
+        $cookie = $request->cookies;
+        if ($cookie->has('locale')){
+            $locale = $cookie->get('locale');
+        }else{
+            $locale = $request->getSession()->get('_locale', 'en');
+        }
         $request->setLocale($locale);
     }
 
