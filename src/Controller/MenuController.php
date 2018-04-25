@@ -4,10 +4,12 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
 use Symfony\Component\Routing\Annotation\Route;
 
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+
 
 class MenuController extends Controller
 {
@@ -33,9 +35,23 @@ class MenuController extends Controller
      * @Route("/about", name="about")
      * @return Response
      */
-    public function about ()
+    public function about (Request $request)
     {
+        echo $request->getLocale();
+        echo $this->get('session')->get('_locale');
+        exit();
         return $this->render('app/about.html.twig');
     }
 
+
+
+    /**
+     * @Route("/language/{code}", name="language", requirements={"code"="fr|en|es"})
+     * @return Response
+     */
+    public function language ($code)
+    {
+        $this->get('session')->set('_locale', $code);
+        return $this->redirectToRoute('home');
+    }
 }

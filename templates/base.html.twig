@@ -13,26 +13,43 @@
         <header>
             <nav class="navbar">
                 <div class="container-fluid">
-                    <!-- Brand, toggle pour l'affichage en version mobile -->
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                             <span><i class="fa fa-bars"></i></span>
                         </button>
-                        <a class="navbar-brand" title="{{ 'menu.welcome'|trans }}" href="#">{{ 'app.title'|trans }} v{{ 'app.version'|trans }}</a>
+                        <a class="navbar-brand" title="{{ 'menu.welcome'|trans }}" href="{{ path('home') }}">{{ 'app.title'|trans }} v{{ 'app.version'|trans }}</a>
                     </div>
-                    <!-- Liens de navigation, formulaires et autres -->
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
                             {% block menu %}
 
                             {% endblock %}
+
+
+
                         </ul>
+
+
 
                         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                             <ul class="nav navbar-nav navbar-right" id="menuDroite">
-                                <li><a href="{{ path('logout') }}" title="{{ 'login.see_profil'|trans }}"><i class="fa fa-user"></i> {{ app.user.firstName }} {{ app.user.lastName }}</a></li>
-                                <li><a href="{{ path('logout') }}" title="{{ 'login.change_pwd'|trans }}">{{ 'login.change_pwd'|trans }} </a></li>
-                                <li><a href="{{ path('logout') }}" title="{{ 'login.log_out'|trans }}">{{ 'login.log_out'|trans }} <i class="fa fa-sign-out"></i></a></li>
+
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ 'menu.language'|trans }}</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="{{ path('language', {'code': 'fr'}) }}" title="Français">FR</a></li>
+                                        <li><a href="{{ path('language', {'code': 'en'}) }}" title="English">EN</a></li>
+                                        <li><a href="{{ path('language', {'code': 'es'}) }}" title="Español">ES</a></li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user"></i> {{ app.user.firstName }} {{ app.user.lastName }}</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="{{ path('logout') }}" title="{{ 'login.see_profil'|trans }}">{{ 'login.see_profil'|trans }}</a></li>
+                                        <li><a href="{{ path('logout') }}" title="{{ 'login.change_pwd'|trans }}">{{ 'login.change_pwd'|trans }} </a></li>
+                                        <li><a href="{{ path('logout') }}" title="{{ 'login.log_out'|trans }}">{{ 'login.log_out'|trans }} <i class="fa fa-sign-out"></i></a></li>
+                                    </ul>
+                                </li>
                             </ul>
                         {% endif %}
                     </div>

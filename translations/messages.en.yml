@@ -5,6 +5,7 @@ app:
 menu:
     about: About
     welcome: Home
+    language: Languages
 
 login:
     change_pwd: Change password
