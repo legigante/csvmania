@@ -70,14 +70,15 @@ class Task
     private $validated_at;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Token", mappedBy="task_id", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Token", mappedBy="task", orphanRemoval=true)
      */
     private $tokens;
 
-    public function __construct()
-    {
-        $this->tokens = new ArrayCollection();
-    }
+    /**
+     * @ORM\Column(type="string", length=55)
+     */
+    private $name;
+
 
     public function getId()
     {
@@ -216,7 +217,7 @@ class Task
     {
         if (!$this->tokens->contains($token)) {
             $this->tokens[] = $token;
-            $token->setTaskId($this);
+            $token->setTask($this);
         }
 
         return $this;
@@ -227,11 +228,24 @@ class Task
         if ($this->tokens->contains($token)) {
             $this->tokens->removeElement($token);
             // set the owning side to null (unless already changed)
-            if ($token->getTaskId() === $this) {
-                $token->setTaskId(null);
+            if ($token->getTask() === $this) {
+                $token->setTask(null);
             }
         }
 
         return $this;
     }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
 }

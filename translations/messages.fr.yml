@@ -9,6 +9,13 @@ menu:
 
 login:
     change_pwd: Modifier le mot de passe
+    current_password: Mot de passe actuel
+    new_password: Nouveau mot de passe
+    confirm_password: Confirmer mot de passe
+    change_pwd_err:
+        bad_confirm: Les deux mots de passe saisis ne correspondent pas
+        bad_format: Le mot de passe doit faire au moins 8 caractères
+        bad_auth: Mauvaise authentification
     log_in: Connexion
     log_out: Déconnexion
     password: Mot de passe
@@ -18,7 +25,24 @@ login:
     username: Login
 
 admin:
-    a: aaze
+    home: Dashboard
+    submit: Valider
 
-tasks:
-    a: aaze
+task:
+    category: Catégorie
+    cat1: Caté1
+    cat2: Caté2
+    name: Nom
+    created_by: Créée par
+    assigned_to: Assignée à
+    validated_by: Validée par
+    created_at: Créée le
+    assigned_at: Assignée le
+    done_at: Terminée le
+    validated_at: Validée le
+    deadline: Deadline
+    home: Mes tâches
+    add: Ajouter une tâche
+    upd: Modifier la tâche
+    del: Supprimer la tâche
+    list: Liste des tâches

@@ -5,6 +5,10 @@
     <link rel="stylesheet" href="{{ asset('build/login.css') }}">
 {% endblock %}
 
+{% block menu %}
+    {{ parent() }}
+{% endblock %}
+
 {% block body %}
     <div id="login-img-g">
         <div id="login-overlay"></div>

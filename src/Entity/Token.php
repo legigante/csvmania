@@ -17,12 +17,6 @@ class Token
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Task", inversedBy="tokens")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $task_id;
-
-    /**
      * @ORM\Column(type="string", length=100)
      */
     private $label;
@@ -77,21 +71,15 @@ class Token
      */
     private $validated_at;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Task", inversedBy="tokens")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $task;
+
     public function getId()
     {
         return $this->id;
-    }
-
-    public function getTaskId(): ?Task
-    {
-        return $this->task_id;
-    }
-
-    public function setTaskId(?Task $task_id): self
-    {
-        $this->task_id = $task_id;
-
-        return $this;
     }
 
     public function getLabel(): ?string
@@ -222,6 +210,18 @@ class Token
     public function setValidatedAt(?\DateTimeInterface $validated_at): self
     {
         $this->validated_at = $validated_at;
+
+        return $this;
+    }
+
+    public function getTask(): ?Task
+    {
+        return $this->task;
+    }
+
+    public function setTask(?Task $task): self
+    {
+        $this->task = $task;
 
         return $this;
     }

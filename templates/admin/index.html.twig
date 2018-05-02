@@ -1,7 +1,17 @@
 {% extends 'layouts/admin.html.twig' %}
 
-{% block title %}Tableau de bord{% endblock %}
+{% block title %}{{ 'admin.home'|trans }}{% endblock %}
 
 {% block content %}
-    Ici il y aura la liste des tâches + stats
+    <h1>todo list</h1>
+    <ul>
+        <li>Finir formulaire création tâche</li>
+        <li>liste tâche à valider</li>
+        <li>% des tâches en court + clickable pour aller voir la tâche</li>
+        <li>timeline tâche en cours</li>
+    </ul>
+
+    <a href="{{ path('add_task') }}" class="btn btn-primary" role="button" title="{{ 'task.add'|trans }}">{{ 'task.add'|trans }}</a>
+
+
 {% endblock %}

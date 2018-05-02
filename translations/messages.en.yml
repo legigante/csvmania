@@ -9,6 +9,13 @@ menu:
 
 login:
     change_pwd: Change password
+    current_password: Current password
+    new_password: New password
+    confirm_password: Confirm password
+    change_pwd_err:
+        bad_confirm: Both passwords don't match
+        bad_format: Password need to have at least 8 types
+        bad_auth: Bad authentication
     log_in: Log in
     log_out: Log out
     password: Password
@@ -18,7 +25,24 @@ login:
     username: Username
 
 admin:
-    a: a
+    home: Dashboard
+    submit: Submit
 
-tasks:
-    a: a
+task:
+    category: Category
+    cat1: Cat1
+    cat2: Cat2
+    name: Name
+    created_by: Created by
+    assigned_to: Assigned to
+    validated_by: Validated by
+    created_at: Created at
+    assigned_at: Assigned at
+    done_at: Done at
+    validated_at: Validated at
+    deadline: Deadline
+    home: My tasks
+    add: Add a task
+    upd: Update task
+    del: Delete task
+    list: List of tasks

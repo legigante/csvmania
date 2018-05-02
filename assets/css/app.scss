@@ -1,35 +1,89 @@
 // variables bootstrap
 
+// boutons
+$btn-primary-bg: lighten(black, 10%);
+$btn-primary-border: lighten(#9d9d9d, 10%);
+$btn-primary-color: white;
+
+// menu
+$navbar-inverse-color: white;
+$navbar-inverse-bg: black;
+$navbar-inverse-border: none;
 
 
-// chemin fonts
+
+
+  // chemin fonts
 $icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
 $fa-font-path: "~font-awesome/fonts";
 
-
-
-// imports
+  // imports
 @import '~bootstrap-sass/assets/stylesheets/bootstrap';
 @import "~font-awesome/scss/font-awesome.scss";
 
 
 
 
+header{
+  min-height: 50px;
+  margin-bottom: 25px;
+}
+
 nav{
   width: 100%;
   position: fixed;
   top: 0;
-  background-color: black;
-  color: white;
+}
+nav .container-fluid{
   border-bottom: 1px solid white !important;
-  border-radius: 0px !important;
 }
 nav .navbar-toggle{
   margin: 0;
   line-height: 0;
-  font-size: 250%;
+  font-size: 210%;
+}
+nav .navbar-toggle:hover{
+  color: white;
+  border-color: white;
+}
+.navbar-header{
+  color: #9d9d9d;
 }
 
+#flags a{
+  text-align: center;
+}
+#flags img{
+  height: 20px;
+}
+#flags{
+  min-width: 102px;
+}
+
+
+
+/* menu ordi */
+@media (min-width: 768px) {
+  #menuProfile > a{
+    margin-right: -15px;
+  }
+}
+
+/* menu smartphone */
+@media (max-width: 768px) {
+  #flags li{
+    display: inline-block;
+    margin-left: 15px;
+  }
+  #flags li,
+  #flags li > a{
+    padding: 5px;
+  }
+
+  #flags li > a:hover{
+    background-color: #2a2a2a;
+  }
+}
 
 
 
@@ -40,14 +94,19 @@ footer {
   line-height: 30px;
   width: 100%;
   background-color: black;
-  color: white;
+  color: $navbar-inverse-link-color;
   border-top: 1px solid white;
 }
 footer p{
   margin: 0 60px;
 }
-footer a,
-nav a{
+footer a{
+  color: $navbar-inverse-link-color;
+}
+footer a:hover{
   color: white;
   text-decoration: none;
 }
+
+
+

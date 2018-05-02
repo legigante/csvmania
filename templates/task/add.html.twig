@@ -1,0 +1,21 @@
+{% extends 'layouts/admin.html.twig' %}
+
+{% block title %}{{ 'task.add'|trans }}{% endblock %}
+
+{% block content %}
+
+    <ul>
+        <li>name et deadline mandatory</li>
+        <li>masquer catégorie pour l'instant</li>
+        <li>ajouter assigned to opt</li>
+        <li>ajouter upload fichier</li>
+        <li>createAction</li>
+    </ul>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+
+        <input type="submit" />
+    {{ form_end(form) }}
+
+{% endblock %}
