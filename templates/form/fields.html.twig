@@ -1,4 +1,30 @@
-
-{% block email_widget %}
-    <strong>test</strong>
+{% block date_widget %}
+    <div class="form-group">
+        <div class="hidden">
+            <input type="text" id="{{ id }}_day" name="{{ full_name }}[day]" value="5" />
+            <input type="text" id="{{ id }}_month" name="{{ full_name }}[month]" value="12" />
+            <input type="text" id="{{ id }}_year" name="{{ full_name }}[year]" value="2016" />
+        </div>
+        <input name="{{ id }}" class="flatpickr" type="text" placeholder="2011-12-24" data-input>
+    </div>
 {% endblock %}
+
+
+{% block csv_widget %}
+    <div class="form-group" id="dndFile">
+        <textarea name="{{ id }}" type="text" class="hidden"></textarea>
+        <div class="dndholder dnddefault">
+            <span>{{ 'dnd_file.drop_zone'|trans }}</span>
+            <span>{{ 'dnd_file.success'|trans }}</span>
+            <span>{{ 'dnd_file.bad_format'|trans }}</span>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block submit_widget %}
+    <div class="form-group text-center">
+        <input class="btn btn-primary" value="{{ 'admin.submit'|trans }}" type="submit" />
+    </div>
+{% endblock %}
+

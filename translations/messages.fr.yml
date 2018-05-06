@@ -18,7 +18,6 @@ login:
         bad_auth: Mauvaise authentification
     log_in: Connexion
     log_out: Déconnexion
-    password: Mot de passe
     remember_me: Se souvenir
     see_profil: Voir profil
     title: Connexion
@@ -28,11 +27,13 @@ admin:
     home: Dashboard
     submit: Valider
 
+entity:
+    name: Nom
+
 task:
     category: Catégorie
     cat1: Caté1
     cat2: Caté2
-    name: Nom
     created_by: Créée par
     assigned_to: Assignée à
     validated_by: Validée par
@@ -41,8 +42,20 @@ task:
     done_at: Terminée le
     validated_at: Validée le
     deadline: Deadline
+    file: Fichier csv
     home: Mes tâches
     add: Ajouter une tâche
     upd: Modifier la tâche
     del: Supprimer la tâche
     list: Liste des tâches
+
+user:
+    first_name: Prénom
+    last_name: Nom
+    username: Email
+    password: Mot de passe
+
+dnd_file:
+    drop_zone: Faire glisser un fichier ici
+    bad_format: Mauvais format, il nous faut du csv !
+    success: Fichier uploadé dans le cache (%n lignes)

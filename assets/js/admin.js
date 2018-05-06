@@ -4,7 +4,6 @@
 
 require('../css/admin.scss');
 
-
 // on document ready
 $(function(){
 

@@ -20,6 +20,7 @@ $fa-font-path: "~font-awesome/fonts";
   // imports
 @import '~bootstrap-sass/assets/stylesheets/bootstrap';
 @import "~font-awesome/scss/font-awesome.scss";
+@import "~flatpickr/dist/flatpickr.css";
 
 
 
@@ -107,6 +108,61 @@ footer a:hover{
   color: white;
   text-decoration: none;
 }
+#footer-phantom{
+  height: 30px;
+}
+
+
+.required:after {
+  content: "*";
+}
 
 
 
+
+
+
+
+
+
+
+
+/* drag and drop file */
+#dndFile .dndholder {
+  height: 100px;
+  margin: 10px;
+  text-align: center;
+  background-color: #b3b4cc;
+}
+#dndFile .dnddefault{
+  border: 10px dashed #333333 !important;
+}
+#dndFile .dndsuccess,
+#dndFile .dndhover{
+  border: 10px dashed #5bcc36 !important;
+  background-color: #baccc5 !important;
+}
+#dndFile .dndbadformat {
+  border: 10px dashed #cc562b !important;
+}
+#dndFile .dndholder span{
+  display: none;
+  margin-top: 30px;
+  font-weight: bold;
+}
+#dndFile .dnddefault span:first-child,
+#dndFile .dndhover span:first-child,
+#dndFile .dndsuccess span:nth-child(2),
+#dndFile .dndbadformat span:last-child{
+  display: block;
+}
+/*
+#dndFile .dndbadformat span:first-child,
+#dndFile .dndbadformat span:nth-child(2),
+#dndFile .dndsuccess span:first-child,
+#dndFile .dndsuccess span:last-child,
+#dndFile .dnddefault span:nth-child(2),
+#dndFile .dnddefault span:last-child{
+  display: none;
+}
+*/

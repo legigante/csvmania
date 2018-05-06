@@ -49,15 +49,18 @@ class MenuController extends Controller
      * @Route("/language/{code}", name="language", requirements={"code"="fr|en|es"})
      * @return Response
      */
-    public function language ($code)
+    public function language (Request $request, $code)
     {
+        // on redirigera vers là où on était
+        $lastRoad = $request->headers->get('referer');
+
         // on set session serveur
         $this->get('session')->set('_locale', $code);
 
         // on set cookie client et on redirige vers accueil
         $response = new Response('',307);
         $response->headers->setCookie(new Cookie('locale', $code, strtotime('now + 60 minutes')));
-        $response->headers->set('location','/');
+        $response->headers->set('location',$lastRoad);
         return $response;
 
     }

@@ -18,7 +18,6 @@ login:
         bad_auth: Bad authentication
     log_in: Log in
     log_out: Log out
-    password: Password
     remember_me: Remember me
     see_profil: See profil
     title: Connexion
@@ -28,11 +27,13 @@ admin:
     home: Dashboard
     submit: Submit
 
+entity:
+    name: Nom
+
 task:
     category: Category
     cat1: Cat1
     cat2: Cat2
-    name: Name
     created_by: Created by
     assigned_to: Assigned to
     validated_by: Validated by
@@ -41,8 +42,20 @@ task:
     done_at: Done at
     validated_at: Validated at
     deadline: Deadline
+    file: Csv file
     home: My tasks
     add: Add a task
     upd: Update task
     del: Delete task
     list: List of tasks
+
+user:
+    first_name: First name
+    last_name: Last name
+    username: Email
+    password: Password
+
+dnd_file:
+    drop_zone: Drop a file here
+    bad_format: Bad format, we need a csv file !
+    success: File uploaded in cache (%n rows)
