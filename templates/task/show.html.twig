@@ -1,0 +1,102 @@
+{% extends 'layouts/site.html.twig' %}
+
+{% block title %}{{ 'task.label'|trans }} {{ task.name }}{% endblock %}
+
+{% block content %}
+
+
+    <div class="row">
+        <div class="mpblock">
+            <h6>{{ 'show.info_gen'|trans }}</h6>
+            <div class="mpcontent">
+                <h1><span>Tâche {{ task.name }}</span>
+                    <div class="bars">
+
+                        <div class="progress progress-task mptooltype" data-toggle="tooltype" data-original-title="{{ progressionDone }}/{{ tokens|length }}">
+                            <div id="barDone" class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="{{ progressionDone }}" aria-valuemax="{{ tokens|length }}">{{ (  (progressionDone/tokens|length)*100)|round(2) }}%</div>
+                        </div>
+                        <span class="badge">Done</span>
+
+                        <div class="progress progress-task mptooltype" data-toggle="tooltype" data-original-title="{{ progressionValidated }}/{{ tokens|length }}">
+                            <div id="barValidated" class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="{{ progressionValidated }}" aria-valuemax="{{ tokens|length }}">{{ (  (progressionValidated/tokens|length)*100)|round(2) }}%</div>
+                        </div>
+                        <span class="badge">Validated</span>
+                    </div>
+
+                </h1>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>{{ 'task.created_by'|trans }} : </strong>
+                        <span><i class="fa fa-user"></i> {{ task.createdBy.firstName }} {{ task.createdBy.lastName }} {{ 'entity.at'|trans }} <i class="fa fa-calendar"></i> {{ task.createdAt|date('Y-m-d h:i:s') }}</span>
+                    </div>
+                    <div class="col-md-6">
+                        {% if task.assignedTo %}
+                            <strong>{{ 'task.assigned_to'|trans }} : </strong>
+                            <span><i class="fa fa-user"></i> {{ task.assignedTo.firstName }} {{ task.assignedTo.lastName }} {{ 'entity.at'|trans }} <i class="fa fa-calendar"></i> {{ task.assignedAt|date('Y-m-d h:i:s') }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        {% if task.doneAt %}
+                            <strong>{{ 'task.done_at'|trans }} : </strong>
+                            <span><i class="fa fa-calendar"></i> {{ task.doneAt|date('Y-m-d h:i:s') }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        {% if task.validatedBy %}
+                            <strong>{{ 'task.validated_by'|trans }} : </strong>
+                            <span><i class="fa fa-user"></i> {{ task.validatedBy.firstName }} {{ task.validatedBy.lastName }} {{ 'entity.at'|trans }} <i class="fa fa-calendar"></i> {{ task.validatedAt|date('Y-m-d h:i:s') }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="mpblock">
+            <h6>{{ 'token.list'|trans }}</h6>
+            <div class="mpcontent">
+                <table id="tokenedit" class="mpstandard mp-table-ajax" data-url="{{ path('token_edit') }}">
+                    <thead>
+                    <tr>
+                        <th>{{ 'token.name'|trans }}</th>
+                        <th>{{ 'token.google'|trans }}</th>
+                        <th>{{ 'token.input'|trans }}</th>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <th>{{ 'token.admin_comment'|trans }}</th>
+                        {% endif %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for token in tokens %}
+                        <tr data-id="{{ token.id }}">
+                            <td>{{ token.label }}</td>
+                            <td><a target="_blank" href="https://www.google.com/search?q={{ token.label|url_encode }}">lien google</a></td>
+                            <td data-prop="notif1"><input type="text" value="{{ token.notif1 }}" /></td>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <td data-prop="notif1_admin"><input type="text" value="{{ token.notif1Admin }}" /></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="mpblock">
+            <h6>todo :</h6>
+            <div class="mpcontent">
+                <ul>
+                    <li>Hermes exemple csv</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

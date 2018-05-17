@@ -23,14 +23,24 @@ login:
     title: Connexion
     username: Login
 
+show:
+    info_gen: Informations générales :
+
+form:
+    required: Ce champs est obligatoire
+    unauthorized: Action non autorisée
+
 admin:
     home: Dashboard
     submit: Valider
 
 entity:
     name: Nom
+    to: à
+    at: à
 
 task:
+    label: Tâche
     category: Catégorie
     cat1: Caté1
     cat2: Caté2
@@ -48,14 +58,27 @@ task:
     upd: Modifier la tâche
     del: Supprimer la tâche
     list: Liste des tâches
+    todo: Tâche à faire
+    tovalidate: Tâches à valider
 
 user:
+    label: Utilisateur
     first_name: Prénom
     last_name: Nom
     username: Email
     password: Mot de passe
 
+token:
+    name: Token
+    google: Google
+    input: Input
+    admin_comment: Input admin
+    list: Liste des tokens
+
 dnd_file:
     drop_zone: Faire glisser un fichier ici
     bad_format: Mauvais format, il nous faut du csv !
     success: Fichier uploadé dans le cache (%n lignes)
+
+progress_bar:
+    label: __d__% complété

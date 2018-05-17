@@ -3,5 +3,68 @@
 {% block title %}{{ 'task.home'|trans }}{% endblock %}
 
 {% block content %}
-Ici il y aura la liste des tâches
+
+    <div class="row">
+        <div class="mpblock">
+            <h6>{{ 'task.todo'|trans }}</h6>
+            <div class="mpcontent container">
+                {% for task in todotasks %}
+                <div class="col-md-4 mpssblock">
+                    <a class="mpcontent">
+                        {{ task.name }}
+                    </a>
+                </div>
+                    <div class="col-md-4 mpssblock">
+                        <a class="mpcontent">
+                            {{ task.name }}
+                        </a>
+                    </div>
+                    <div class="col-md-4 mpssblock">
+                        <a class="mpcontent">
+                            {{ task.name }}
+                        </a>
+                    </div>
+                    <div class="col-md-4 mpssblock">
+                        <a class="mpcontent">
+                            {{ task.name }}
+                        </a>
+                    </div>
+                    <div class="col-md-4 mpssblock">
+                        <a class="mpcontent">
+                            {{ task.name }}
+                        </a>
+                    </div>
+                {% endfor %}
+             </div>
+        </div>
+    </div>
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="row">
+            <div class="mpblock">
+                <h6>{{ 'task.tovalidate'|trans }}</h6>
+                <div class="mpcontent container">
+                    {% for task in tovalidatetasks %}
+                        <div class="col-md-4 mpssblock">
+                            <div class="mpcontent">
+                                {{ task.name }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="mpblock">
+            <h6>todo :</h6>
+            <div class="mpcontent container">
+                <ul>
+                    <li>mettre prog done et validated</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

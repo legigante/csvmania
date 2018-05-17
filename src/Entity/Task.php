@@ -77,7 +77,7 @@ class Task
     /**
      * @ORM\Column(type="string", length=55)
      * @Assert\NotBlank()
-     * @Assert\Length(min=3)
+     * @Assert\Length(min=3,max=50)
      */
     private $name;
 

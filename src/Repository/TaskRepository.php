@@ -2,7 +2,10 @@
 
 namespace App\Repository;
 
+use Doctrine\ORM\Query\ResultSetMapping;
+
 use App\Entity\Task;
+use App\Entity\Token;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -19,32 +22,76 @@ class TaskRepository extends ServiceEntityRepository
         parent::__construct($registry, Task::class);
     }
 
-//    /**
-//     * @return Task[] Returns an array of Task objects
-//     */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Task
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+    /**
+     * @param $user_id
+     * @return array
+     */
+    public function getToDoTasks($user_id): array{
+
+        $qb = $this->createQueryBuilder('t')
+            ->andWhere('t.assigned_to = :user_id')
+            ->setParameter('user_id', $user_id)
+            ->getQuery();
+
+        return $qb->execute();
     }
-    */
+
+    /**
+     * @param $user_id
+     * @return array
+     */
+    public function getToValidateTasks($user_id): array{
+
+        $qb = $this->createQueryBuilder('t')
+            ->andWhere('t.validated_by = :user_id')
+            ->setParameter('user_id', $user_id)
+            ->getQuery();
+
+        return $qb->execute();
+    }
+
+
+
+
+
+    /**
+     * @param $id
+     * @return array
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getTaskProgressionDone($id): array
+    {
+        $qb = $this->createQueryBuilder('ta')
+            ->select('count(to.id)')
+            ->innerJoin('ta.tokens','to')
+            ->andWhere('ta.id = :id')
+            ->andWhere('to.done_at IS NOT NULL')
+            ->setParameter('id', $id)
+            ->setMaxResults(1)
+            ->getQuery();
+
+        return $qb->getSingleResult();
+    }
+
+
+    /**
+     * @param $id
+     * @return array
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getTaskProgressionValidated($id): array{
+        $qb = $this->createQueryBuilder('ta')
+            ->select('count(to.id)')
+            ->innerJoin('ta.tokens','to')
+            ->andWhere('ta.id = :id')
+            ->andWhere('to.validated_at IS NOT NULL')
+            ->setParameter('id', $id)
+            ->getQuery();
+
+        return $qb->getSingleResult();
+    }
+
 }

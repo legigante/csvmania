@@ -88,6 +88,28 @@ nav .navbar-toggle:hover{
 
 
 
+
+
+
+.form-error-message{
+  color: #ff4036;
+}
+
+.badge-danger{
+  background-color: #cc562b;
+}
+
+.form-group legend{
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 14px;
+  border-bottom: none;
+}
+
+
+
+
+
 footer {
   position: fixed;
   bottom: 0;
@@ -124,45 +146,109 @@ footer a:hover{
 
 
 
-
-
-
 /* drag and drop file */
-#dndFile .dndholder {
+.dndFile .dndholder {
   height: 100px;
-  margin: 10px;
   text-align: center;
   background-color: #b3b4cc;
 }
-#dndFile .dnddefault{
+.dndFile .dnddefault{
   border: 10px dashed #333333 !important;
 }
-#dndFile .dndsuccess,
-#dndFile .dndhover{
+.dndFile .dndsuccess,
+.dndFile .dndhover{
   border: 10px dashed #5bcc36 !important;
   background-color: #baccc5 !important;
 }
-#dndFile .dndbadformat {
+.dndFile .dndbadformat,
+.dndFile .dndrequired{
   border: 10px dashed #cc562b !important;
+  background-color: #ccb4b0 !important;
 }
-#dndFile .dndholder span{
+.dndFile .dndholder span{
   display: none;
   margin-top: 30px;
   font-weight: bold;
 }
-#dndFile .dnddefault span:first-child,
-#dndFile .dndhover span:first-child,
-#dndFile .dndsuccess span:nth-child(2),
-#dndFile .dndbadformat span:last-child{
+.dndFile .dnddefault span:first-child,
+.dndFile .dndhover span:first-child,
+.dndFile .dndsuccess span:nth-child(2),
+.dndFile .dndbadformat span:nth-child(3),
+.dndFile .dndrequired span:nth-child(4){
   display: block;
 }
-/*
-#dndFile .dndbadformat span:first-child,
-#dndFile .dndbadformat span:nth-child(2),
-#dndFile .dndsuccess span:first-child,
-#dndFile .dndsuccess span:last-child,
-#dndFile .dnddefault span:nth-child(2),
-#dndFile .dnddefault span:last-child{
-  display: none;
+
+
+.progress-task{
+  width: 125px;
+  display: inline-table;
 }
-*/
+
+
+
+
+.mpblock > h6{
+  border-bottom: 1px dashed white;
+  margin: 0;
+  padding: 3px 5px;
+}
+.mpblock{
+  border: 1px solid white;
+  margin-bottom: 15px;
+  background-color: black;
+  color: white;
+}
+.mpcontent{
+  padding: 8px 10px;
+}
+.mpblock h1 .bars{
+  display: inline-block;
+}
+
+.mpssblock{
+  padding: 8px 10px;
+}
+
+.mpssblock > .mpcontent{
+  display: block;
+  border-radius: 12px;
+  background-color: #9d9d9d;
+  color: white;
+  min-height: 70px;
+}
+.mpssblock > .mpcontent:hover{
+  cursor: pointer;
+  background-color: #a6a6a6;
+  text-decoration: none;
+  color: #efefef;
+}
+
+
+
+table.mpstandard{
+  width: 100%;
+  margin: 10px auto;
+}
+.mpstandard td,
+.mpstandard th{
+  border: 1px solid white;
+  text-align: center;
+}
+
+.mpstandard tbody tr:nth-child(even){
+  background-color: #181818;
+}
+.mpstandard tbody tr:nth-child(odd){
+  background-color: #212121;
+}
+.mpstandard tbody tr:hover{
+  background-color: black;
+}
+.mpstandard input{
+  color: black;
+  transition: background-color 0.5s ease;
+}
+
+
+
+

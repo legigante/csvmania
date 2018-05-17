@@ -1,22 +1,26 @@
 {% block date_widget %}
     <div class="form-group">
         <div class="hidden">
-            <input type="text" id="{{ id }}_day" name="{{ full_name }}[day]" value="5" />
-            <input type="text" id="{{ id }}_month" name="{{ full_name }}[month]" value="12" />
-            <input type="text" id="{{ id }}_year" name="{{ full_name }}[year]" value="2016" />
+            <input type="text" id="{{ id }}_day" name="{{ full_name }}[day]" value="{{ data|date('j') }}" />
+            <input type="text" id="{{ id }}_month" name="{{ full_name }}[month]" value="{{ data|date('n') }}" />
+            <input type="text" id="{{ id }}_year" name="{{ full_name }}[year]" value="{{ data|date('Y') }}" />
         </div>
-        <input name="{{ id }}" class="flatpickr" type="text" placeholder="2011-12-24" data-input>
+        <input value="{{ data|date('Y-m-d') }}" name="{{ id }}" class="flatpickr form-control" type="text" placeholder="2011-12-24" {{ required ? 'required="required"' : '' }} data-input>
     </div>
 {% endblock %}
 
 
 {% block csv_widget %}
-    <div class="form-group" id="dndFile">
-        <textarea name="{{ id }}" type="text" class="hidden"></textarea>
-        <div class="dndholder dnddefault">
+    <div class="form-group dndFile">
+        <textarea id="{{ id }}" name="{{ full_name }}" class="hidden" {{ required ? 'required="required"' : '' }}>{{ data }}</textarea>
+        {% if errors|length > 0 %}
+            <span>{{ error.message }}</span>
+        {% endif %}
+        <div class="dndholder dnddefault form-control">
             <span>{{ 'dnd_file.drop_zone'|trans }}</span>
             <span>{{ 'dnd_file.success'|trans }}</span>
             <span>{{ 'dnd_file.bad_format'|trans }}</span>
+            <span>{{ 'form.required'|trans }}</span>
         </div>
     </div>
 {% endblock %}
@@ -27,4 +31,3 @@
         <input class="btn btn-primary" value="{{ 'admin.submit'|trans }}" type="submit" />
     </div>
 {% endblock %}
-

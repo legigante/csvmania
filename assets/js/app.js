@@ -2,9 +2,8 @@
  * Ici les scripts génériques présents partout
  */
 
-
 // librairies
-var $ = require('jquery');
+//var $ = require('jquery');
 require('bootstrap-sass');
 require('flatpickr');
 require('flatpickr/dist/l10n/fr.js');
@@ -18,6 +17,322 @@ require('../css/app.scss');
 // on document ready
 $(function () {
 
+
+
+
+
+
+
+
+
+    /* drag and drop file (!!! ne marche qu'avec un seul input !!!) */
+    function oDndFile(selector) {
+
+        // constructor
+        var alreadyUploaded = false;
+        var dndFile = document.getElementsByClassName(selector);
+
+        if(dndFile.length){
+            var that = this;
+
+
+            // handle default value
+            this.setData = function(data64){
+                var data = atob(data64);
+                if(/^([^\r\n]*);([^\r\n;]+)$/gm.test(data)){
+                    var nbRow = (data.match(/[\r\n]/g) || []).length;
+                    dndTextarea.value = data64;
+                    var span = dndHolder.getElementsByTagName('span')[1];
+                    span.innerHTML = span.innerHTML.replace('%n', nbRow);
+                    dndHolder.className = 'form-control dndholder dndsuccess';
+                    alreadyUploaded = true;
+                }else{
+                    dndHolder.className = 'form-control dndholder dndbadformat';
+                }
+            }
+            // read file
+            this.readFile = function (file) {
+                var reader = new FileReader();
+                reader.onload = function (event){
+                    // check format
+                    var data64 = event.target.result.split('base64,')[1];
+                    that.setData(data64);
+                }
+                reader.readAsDataURL(file[0]);
+            }
+
+
+            // group element
+            dndFile = dndFile[0];
+
+            // find form
+            var dndForm = dndFile.parentElement;
+            while(dndForm.tagName.toUpperCase() != 'FORM'){
+                dndForm = dndForm.parentElement;
+            }
+
+            // drag and drop event
+            var dndHolder = dndFile.getElementsByClassName('dndholder')[0];
+            dndHolder.ondragover = function () {
+                if(!alreadyUploaded){
+                    this.className = 'form-control dndholder dndhover';
+                }
+                return false;
+            };
+            dndHolder.ondragend = function () {
+                if(!alreadyUploaded){
+                    this.className = 'form-control dndholder dnddefault';
+                }
+                return false;
+            };
+            dndHolder.ondragstart = function () {
+                if(!alreadyUploaded){
+                    this.className = 'form-control dndholder dndhover';
+                }
+                return false;
+            };
+            dndHolder.ondragleave = function () {
+                if(!alreadyUploaded){
+                    this.className = 'form-control dndholder dnddefault';
+                    return false;
+                }
+            };
+            dndHolder.ondrop = function (e) {
+                if(!alreadyUploaded){
+                    this.className = 'form-control dndholder dnddefault';
+                    e.preventDefault();
+                    that.readFile(e.dataTransfer.files);
+                }else{
+                    return false;
+                }
+            }
+
+            // find textarea
+            var dndTextarea = dndFile.getElementsByTagName('textarea')[0];
+            if(dndTextarea.value != ''){
+                this.setData(dndTextarea.value);
+            }
+
+            // on met rouge si required et vide
+            if(dndTextarea.required == true){
+                dndTextarea.required = false;
+                dndForm.onsubmit = function(){
+                    if(!alreadyUploaded){
+                        dndHolder.className = 'form-control dndholder dndrequired';
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+    var oDND = new oDndFile('dndFile');
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * flatpickr : https://flatpickr.js.org/
+     * @type {*|Instance|Instance[]}
+     */
+    const fp = flatpickr(".flatpickr", {
+        locale: document.documentElement.lang,
+        allowInput: true,
+        // on met à jour les champs cachés à la sélection d'une date
+        onChange: function(selectedDates, dateStr, instance){
+            var d = selectedDates[0];
+            var elName = instance.input.name;
+            document.getElementById(elName+'_day').value = d.getDay();
+            document.getElementById(elName+'_month').value = d.getMonth()+1;
+            document.getElementById(elName+'_year').value = d.getFullYear();
+        }
+    });
+
+
+
+
+
+    /**
+     * set progress bar width for animation
+     * @param selector
+     */
+    function oProgressBar(selector){
+
+        this.draw = function(el){
+            console.log('draw');
+            console.log(el.getAttribute('aria-valuenow'));
+            console.log(el.getAttribute('aria-valuemax'));
+            var w = Math.round(100*(el.getAttribute('aria-valuenow')/el.getAttribute('aria-valuemax'))*100)/100;
+            console.log(w);
+            el.style.width = w+'%';
+            el.innerHTML = w+'%';
+            el.parentElement.setAttribute('data-original-title', el.getAttribute('aria-valuenow') + '/' + el.getAttribute('aria-valuemax'));
+            if(w==100){
+                el.style.backgroundColor = '#5bcc36';
+            }else{
+                el.style.backgroundColor = '#337ab7';
+            }
+            if(w==0){
+                el.style.color = 'black';
+            }else{
+                el.style.color = 'white';
+            }
+        }
+
+
+
+        this.updateBar = function(id, i){
+            console.log('updbar');
+            var el = document.getElementById(id);
+            console.log(el.getAttribute('aria-valuenow'));
+            el.setAttribute('aria-valuenow', parseInt(el.getAttribute('aria-valuenow')) + i);
+            console.log(el.getAttribute('aria-valuenow'));
+            this.draw(el);
+        }
+
+        // constructor
+        var pbs = document.getElementsByClassName(selector);
+        var i = 0;
+        while(i < pbs.length){
+            var pb = pbs[i];
+            this.draw(pb);
+            i++;
+        }
+
+    }
+    var oPB = new oProgressBar('progress-bar');
+
+
+
+
+
+
+
+    /* tooltype */
+    $('.mptooltype').tooltip();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // mettre id talbeau puis callbakc pour mettre à jour les bars de prog
+    function ompTableAjax(tableDOM, cb){
+
+        tableDOM.find('input:text').change(function(){
+            var el = $(this);
+            var val = el.val();
+            var json = {value: val};
+
+            // get all table, tr,td and input data attributes
+            $.each(el.closest('table').data(), function(key, val) {
+                json[key]= val;
+            });
+            $.each(el.closest('tr').data(), function(key, val) {
+                json[key]= val;
+            });
+            $.each(el.closest('td').data(), function(key, val) {
+                json[key]= val;
+            });
+            $.each(el.data(), function(key, val) {
+                json[key]= val;
+            });
+
+            mpAjax(json.url, 'POST', json, function(err,res){
+                var colorBef = el.css('background-color');
+                if(!err){
+                    var color = res.error=='' ? 'green' : 'red';
+                    if(res.error!=''){
+                        alert(res.error);
+                    }
+
+                }else{
+                    var color = 'red';
+                }
+
+                el.css('background-color', color);
+                setTimeout(function(){
+                    el.css('background-color', colorBef)
+                }, 750);
+
+                // callback success
+                cb(res);
+
+            });
+        });
+    }
+
+    var el = $('#tokenedit');
+    if(el.length){
+        var ote = new ompTableAjax(el, function(res){
+            console.log('cb' + ' - ' + JSON.stringify(res));
+            if(res.action == 'notif1_admin'){
+                oPB.updateBar('barValidated', res.value);
+            }else if(res.action == 'notif1'){
+                oPB.updateBar('barDone', res.value);
+            }
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /* ajax */
+    function mpAjax(url, method, json, cb){
+        $.ajax({
+            url: url,
+            data: json,
+            dataType: 'json',
+            method: method,
+            success: function(res){
+                cb(0,res);
+            },
+            error: function(res){
+                console.log('error '+res.status+' '+res.statusText);
+                console.log(res.responseText);
+                cb(1,res.responseText);
+            }
+        });
+    }
+
+
+
+
 });
 
 
@@ -26,84 +341,7 @@ $(function () {
 
 
 
-/* drag and drop file */
-function oDndFile() {
-    // constructor
-    var alreadyUploaded = false;
-    var dndFile = document.getElementById('dndFile');
-    var that = this;
-    if (dndFile) {
-        var holder = dndFile.getElementsByClassName('dndholder')[0];
-        holder.ondragover = function () {
-            if(!alreadyUploaded){
-                this.className = 'dndholder dndhover';
-            }
-            return false;
-        };
-        holder.ondragend = function () {
-            if(!alreadyUploaded){
-                this.className = 'dndholder dnddefault';
-            }
-            return false;
-        };
-        holder.ondragstart = function () {
-            if(!alreadyUploaded){
-                this.className = 'dndholder dndhover';
-            }
-            return false;
-        };
-        holder.ondragleave = function () {
-            if(!alreadyUploaded){
-                this.className = 'dndholder dnddefault';
-                return false;
-            }
-        };
-        holder.ondrop = function (e) {
-            if(!alreadyUploaded){
-                this.className = 'dndholder dnddefault';
-                e.preventDefault();
-                that.readFile(e.dataTransfer.files);
-            }else{
-                return false;
-            }
-        }
-    }
-
-    // read file
-    this.readFile = function (file) {
-        reader = new FileReader();
-        reader.onload = function (event){
-            // check format
-            var data64 = event.target.result.split('base64,')[1];
-            data = atob(data64);
-            if(/^([^\r\n]*);([^\r\n;]+)$/gm.test(data)){
-                var nbRow = (data.match(/[\r\n]/g) || []).length;
-                dndFile.getElementsByTagName('input')[0].value = data64;
-                var span = holder.getElementsByTagName('span')[1];
-                span.innerHTML = span.innerHTML.replace('%n', nbRow);
-                holder.className = 'dndholder dndsuccess';
-                alreadyUploaded = true;
-            }else{
-                holder.className = 'dndholder dndbadformat';
-            }
-        }
-        reader.readAsDataURL(file[0]);
-    }
-}
-var oDND = new oDndFile();
 
 
 
 
-/* flatpickr */
-const fp = flatpickr(".flatpickr", {
-    locale: document.documentElement.lang,
-    allowInput: true,
-    onChange: function(selectedDates, dateStr, instance){
-        var d = selectedDates[0];
-        var elName = instance.input.name;
-        document.getElementById(elName+'_day').value = d.getDay();
-        document.getElementById(elName+'_month').value = d.getMonth()+1;
-        document.getElementById(elName+'_year').value = d.getFullYear();
-    }
-});

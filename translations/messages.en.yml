@@ -23,14 +23,24 @@ login:
     title: Connexion
     username: Username
 
+show:
+    info_gen: General info :
+
+form:
+    required: This field is mandatory
+    unauthorized: Permission refused
+
 admin:
     home: Dashboard
     submit: Submit
 
 entity:
     name: Nom
+    to: to
+    at: at
 
 task:
+    label: Task
     category: Category
     cat1: Cat1
     cat2: Cat2
@@ -48,14 +58,27 @@ task:
     upd: Update task
     del: Delete task
     list: List of tasks
+    todo: Tasks to do
+    tovalidate: Tasks to validate
 
 user:
+    label: User
     first_name: First name
     last_name: Last name
     username: Email
     password: Password
 
+token:
+    name: Token
+    google: Google
+    input: Input
+    admin_comment: Input admin
+    list: List of tokens
+
 dnd_file:
     drop_zone: Drop a file here
     bad_format: Bad format, we need a csv file !
     success: File uploaded in cache (%n rows)
+
+progress_bar:
+    label: __d__% completed
