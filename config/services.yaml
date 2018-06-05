@@ -42,3 +42,8 @@ services:
         class: App\EventListener\KernelListener
         tags:
             - { name: kernel.event_listener, priority: 20, event: kernel.request, method: onKernelRequest }
+
+    twig.extension.intl:
+        class: Twig_Extensions_Extension_Intl
+        tags:
+            - { name: twig.extension }

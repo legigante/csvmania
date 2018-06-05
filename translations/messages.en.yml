@@ -5,7 +5,11 @@ app:
 menu:
     about: About
     welcome: Home
-    language: Languages
+    language:
+        label: Languages
+        en: English
+        es: Spanish
+        fr: French
 
 login:
     change_pwd: Change password
@@ -23,6 +27,13 @@ login:
     title: Connexion
     username: Username
 
+admin:
+    home: Dashboard
+    submit: Submit
+
+list:
+    list: list
+
 show:
     info_gen: General info :
 
@@ -30,16 +41,23 @@ form:
     required: This field is mandatory
     unauthorized: Permission refused
 
-admin:
-    home: Dashboard
-    submit: Submit
-
 entity:
     name: Nom
     to: to
     at: at
 
+user:
+    label: User
+    first_name: First name
+    last_name: Last name
+    username: Email
+    password: Password
+
 task:
+    done_tasks: Done tasks
+    none: aucune
+    ongoing: Ongoing task
+    next: Next task
     label: Task
     category: Category
     cat1: Cat1
@@ -59,24 +77,40 @@ task:
     del: Delete task
     list: List of tasks
     todo: Tasks to do
+    fields: Fields
     tovalidate: Tasks to validate
+    nb_answer_needed: Number of answer needed
+    priority:
+        label: Priority
+        1: High
+        2: Normal
+        3: Low
 
-user:
-    label: User
-    first_name: First name
-    last_name: Last name
-    username: Email
-    password: Password
+feeling:
+    label:
+        is_campaign: is campaign
+        nb_contact_info: nb contact info
+        nb_questions: nb questions
+        is_autore: is author
+        interest: interest
+        is_contact_me_later: is contact me later
+        is_unsubscribe: is unsubscribe
+        is_interest: is interest
+        is_dirty: is dirty
+    format:
+        1: boolean
+        2: count
+        3: gauge
 
-token:
-    name: Token
+content:
+    name: Message
     google: Google
     input: Input
     admin_comment: Input admin
-    list: List of tokens
+    list: List of messages
 
 dnd_file:
-    drop_zone: Drop a file here
+    drop_zone: Click or drop a file here
     bad_format: Bad format, we need a csv file !
     success: File uploaded in cache (%n rows)
 

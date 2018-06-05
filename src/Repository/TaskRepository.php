@@ -2,10 +2,9 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\Query\ResultSetMapping;
-
 use App\Entity\Task;
-use App\Entity\Token;
+use App\Entity\Assignment;
+use App\Form\Type\TaskType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -23,39 +22,71 @@ class TaskRepository extends ServiceEntityRepository
     }
 
 
-    /**
-     * @param $user_id
-     * @return array
-     */
-    public function getToDoTasks($user_id): array{
 
+
+    /**
+     * trouve le nombre de tâche qu'il reste à piocher pour le user
+     * @return int
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getNbTodoTasks($user_id){
         $qb = $this->createQueryBuilder('t')
-            ->andWhere('t.assigned_to = :user_id')
+            ->select('count(t.id)')
+            ->andWhere('t.status = 0')
+            ->andWhere('t.id NOT IN (SELECT a FROM App\Entity\Assignment a WHERE a.assigned_to = :user_id)')
             ->setParameter('user_id', $user_id)
             ->getQuery();
 
-        return $qb->execute();
+        return $qb->getSingleScalarResult();
     }
+
+    /**
+     * trouve la prochaine tâche à piocher pour le user
+     * @param $user_id
+     * @return Task|null
+     */
 
     /**
      * @param $user_id
-     * @return array
+     * @param $nb nb tasks to return
+     * @return array => [ [Task,nb_contents, nb_fields] , [...] ]
      */
-    public function getToValidateTasks($user_id): array{
+    public function getNextTodoTasks($user_id, $nb){
 
-        $qb = $this->createQueryBuilder('t')
-            ->andWhere('t.validated_by = :user_id')
+        $r = $this->createQueryBuilder('t')
+            ->select('t')
+            ->innerJoin('t.contents', 'c')
+            ->addSelect('COUNT(DISTINCT c.id) AS nb_contents')
+            ->innerJoin('t.fields', 'f')
+            ->addSelect('COUNT(DISTINCT f.id) AS nb_fields')
+            ->andWhere('t.status = 0')
+            ->andWhere('t.id NOT IN (SELECT a FROM App\Entity\Assignment a WHERE a.assigned_to = :user_id)')
             ->setParameter('user_id', $user_id)
-            ->getQuery();
+            ->groupBy('t.id')
+            ->setMaxResults($nb)
+            ->getQuery()
+            ->getResult();
 
-        return $qb->execute();
+        if($r[0][0] == null){
+            return [];
+        }else{
+            return $r;
+        }
+
     }
 
 
 
 
 
+
+
+
+
+
+
     /**
+     *
      * @param $id
      * @return array
      * @throws \Doctrine\ORM\NoResultException
@@ -72,9 +103,11 @@ class TaskRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->getQuery();
 
+        dump($qb);
+        exit();
+
         return $qb->getSingleResult();
     }
-
 
     /**
      * @param $id
@@ -93,5 +126,4 @@ class TaskRepository extends ServiceEntityRepository
 
         return $qb->getSingleResult();
     }
-
 }

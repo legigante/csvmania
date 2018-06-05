@@ -2,77 +2,131 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-
 use App\Entity\Task;
-use App\Entity\Token;
+use App\Entity\Assignment;
+use App\Entity\Field;
 use App\Form\Type\TaskType;
+use App\Entity\Content;
+
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class TaskController extends Controller
 {
 
+
     /**
+     * page d'accueil des users => vue des tâches en cours et tâches à piocher
      * @Route("/tasks", name="tasks")
      * @return Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function index(AuthorizationCheckerInterface $authChecker)
+    public function index()
     {
-
+        // get user id
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $rep = $this->getDoctrine()->getRepository(Task::class);
+        $user_id = $user->getId();
 
-        // get assigned tasks to do
-        $todoTasks = $rep->getToDoTasks($user->getId());
+        // get repositories
+        $repAssignment = $this->getDoctrine()->getRepository(Assignment::class);
+        $repTask = $this->getDoctrine()->getRepository(Task::class);
 
-        // get assigned tasks done
-        $tovalidateTasks = [];
-        if ($authChecker->isGranted('ROLE_ADMIN')) {
-            $tovalidateTasks = $rep->getToValidateTasks($user->getId());
-        }
+        // get ongoing assigmnents
+        $ongoingAssignments = $repAssignment->getOngoingAssignments($user_id);
 
-        return $this->render('task/index.html.twig', array(
-            'todotasks' => $todoTasks,
-            'tovalidatetasks' => $tovalidateTasks
-        ));
+        // get next task
+        $nextTodoTasks = $repTask->getNextTodoTasks($user_id, 3);
+
+        // nb remainded to do task
+        $nbTodoTasks = $repTask->getNbTodoTasks($user_id);
+
+        return $this->render('task/index.html.twig', [
+            'nbTodoTasks' => $nbTodoTasks,
+            'ongoingAssignments' => $ongoingAssignments,
+            'nextTodoTasks' => $nextTodoTasks,
+        ]);
+
     }
 
 
 
+    /**
+     * assigne la tâche au user si pas déjà fait puis redirige vers la saisie
+     * @Route("/task/pick/{id}", name="pick_task", requirements={"id"="\d+"})
+     * @param $id
+     * @param SessionInterface $session
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function pick($id, SessionInterface $session){
+
+        // get user id
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user_id = $user->getId();
+
+        // task repository
+        $em = $this->getDoctrine()->getManager();
+        $repTask = $this->getDoctrine()->getRepository(Task::class);
+        $repAssignment = $this->getDoctrine()->getRepository(Assignment::class);
+
+        // get task
+        $task = $repTask->find($id);
+
+        // if task status = 0
+        if($task->getStatus() == 0){
+            // if not already assigned
+            if(!$repAssignment->isAlreadyAssigned($id,$user_id)){
+                // create new assignment
+                $assignment = new Assignment();
+                $assignment->setAssignedAt(new \DateTime());
+                $assignment->setAssignedTo($user);
+                $assignment->setTask($task);
+
+                // on stock en base
+                $em->persist($assignment);
+                $em->flush();
+
+                // on renvoi à la saisie
+                $session->getFlashBag()->add('success', 'entity.Assignment.flash.success');
+                return $this->redirectToRoute('fill_assignment', ['id'=>$assignment->getId()]);
+            }else{
+                $session->getFlashBag()->add('danger', 'entity.Assignment.flash.already_assigned');
+            }
+        }else{
+            $session->getFlashBag()->add('danger', 'entity.Assignment.flash.no_more_assignation');
+        }
+
+        // sinon on retourne aux tâches
+        return $this->redirectToRoute('tasks');
+
+    }
 
 
 
     /**
+     * visualisation de la tâche
      * @Route("/task/{id}", name="show_task", requirements={"id"="\d+"})
      * @param $id
      * @return Response
-     * @throws \Doctrine\ORM\NoResultException
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function show($id){
 
-        $rep = $this->getDoctrine()->getRepository(Task::class);
+        $repTask = $this->getDoctrine()->getRepository(Task::class);
 
-        // get % prog user
-        $progressionDone = $rep->getTaskProgressionDone($id)[1];
-        // get % prog admin
-        $progressionValidated = $rep->getTaskProgressionValidated($id)[1];
         // get task
-        $task = $rep->find($id);
-        // get tokens
-        $tokens = $task->getTokens();
+        $task = $repTask->find($id);
+        // get contents
+        $contents = $task->getContents();
+        // get user assigned to
+        $assignments = $task->getAssignments();
 
         return $this->render('task/show.html.twig', array(
             "task"=>$task,
-            "tokens"=>$tokens,
-            "progressionDone"=>$progressionDone,
-            "progressionValidated"=>$progressionValidated
+            "contents"=>$contents,
+            "assignments"=>$assignments
         ));
     }
 
@@ -89,7 +143,7 @@ class TaskController extends Controller
         $form = $this->createForm(TaskType::class, $task);
 
         return $this->render('task/add.html.twig', array(
-            'form' => $form->createView(),
+            'form' => $form->createView()
         ));
     }
 
@@ -109,38 +163,40 @@ class TaskController extends Controller
 
             $em = $this->getDoctrine()->getManager();
 
-            // on check le fichier csv
+            // on stock le csv - todo: il faudrait vérifier si c'est bon format
             $csvName = uniqid() . '.csv';
             $csvFolder = $_SERVER['DOCUMENT_ROOT'] . '/../files/csv/';
             $csvContent = base64_decode($form['file']->getData());
-            $rows = explode("\n",$csvContent);
-                // nb colonne
-                // entête ?
-
-            // on créé le fichier csv
             $fp = fopen($csvFolder.$csvName, 'w');
+            fwrite($fp, $csvContent);
+            fclose($fp);
+
+            // on créé un content par ligne
+            $rows = explode("\n",$csvContent);
             $i = 1;
             while($i < count($rows)){
                 if($rows[$i] != ''){
-                    fwrite($fp, $rows[$i] . "\n");
                     $cols = explode(';',$rows[$i]);
-                    $token = new Token();
-                    $token->setLabel($cols[0]);
-                    $token->setTask($task);
-                    $em->persist($token);
+                    $content = new Content();
+                    $content->setTask($task);
+                    $content->setIdSparkup($cols[0]);
+                    $content->setMessage($cols[1]);
+                    $em->persist($content);
                 }
                 $i++;
             }
-            fclose($fp);
 
-            // on complère l'entité
-            $task->setPath($csvName);
-            $task->setCategory(1);
-            if($form['assigned_to']->getData()){
-                $task->setAssignedAt(new \DateTime());
-            }
+            // on créé la tâche
             $task->setCreatedBy($user);
             $task->setCreatedAt(new \DateTime());
+
+            $feelings = $form['fields']->getData();
+            foreach ($feelings as $feeling) {
+                $field = new Field();
+                $field->setTask($task);
+                $field->setFeeling($feeling);
+                $em->persist($field);
+            }
 
             // on stock en base
             $em->persist($task);

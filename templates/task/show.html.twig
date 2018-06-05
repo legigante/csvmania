@@ -11,14 +11,13 @@
             <div class="mpcontent">
                 <h1><span>Tâche {{ task.name }}</span>
                     <div class="bars">
-
-                        <div class="progress progress-task mptooltype" data-toggle="tooltype" data-original-title="{{ progressionDone }}/{{ tokens|length }}">
-                            <div id="barDone" class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="{{ progressionDone }}" aria-valuemax="{{ tokens|length }}">{{ (  (progressionDone/tokens|length)*100)|round(2) }}%</div>
+                        <div class="progress progress-task mptooltype" data-toggle="tooltype" data-original-title="{{ '' }}/{{ contents|length }}">
+                            <div id="barDone" class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="{{ 0 }}" aria-valuemax="{{ contents|length }}">{{ (  (0/contents|length)*100)|round(2) }}%</div>
                         </div>
                         <span class="badge">Done</span>
 
-                        <div class="progress progress-task mptooltype" data-toggle="tooltype" data-original-title="{{ progressionValidated }}/{{ tokens|length }}">
-                            <div id="barValidated" class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="{{ progressionValidated }}" aria-valuemax="{{ tokens|length }}">{{ (  (progressionValidated/tokens|length)*100)|round(2) }}%</div>
+                        <div class="progress progress-task mptooltype" data-toggle="tooltype" data-original-title="{{ '' }}/{{ contents|length }}">
+                            <div id="barValidated" class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="{{ 0 }}" aria-valuemax="{{ contents|length }}">{{ (  (0/contents|length)*100)|round(2) }}%</div>
                         </div>
                         <span class="badge">Validated</span>
                     </div>
@@ -31,24 +30,20 @@
                         <span><i class="fa fa-user"></i> {{ task.createdBy.firstName }} {{ task.createdBy.lastName }} {{ 'entity.at'|trans }} <i class="fa fa-calendar"></i> {{ task.createdAt|date('Y-m-d h:i:s') }}</span>
                     </div>
                     <div class="col-md-6">
-                        {% if task.assignedTo %}
-                            <strong>{{ 'task.assigned_to'|trans }} : </strong>
-                            <span><i class="fa fa-user"></i> {{ task.assignedTo.firstName }} {{ task.assignedTo.lastName }} {{ 'entity.at'|trans }} <i class="fa fa-calendar"></i> {{ task.assignedAt|date('Y-m-d h:i:s') }}</span>
-                        {% endif %}
+                        <strong>{{ 'task.assigned_to'|trans }} : </strong>
+                        {% for assignment in assignments %}
+                            <span><i class="fa fa-user"></i> {{  assignment.assignedTo.firstName }} {{ assignment.assignedTo.lastName }} {{ 'entity.at'|trans }} <i class="fa fa-calendar"></i> {{ assignment.assignedAt|date('Y-m-d h:i:s') }}</span>
+                        {% endfor %}
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        {% if task.doneAt %}
-                            <strong>{{ 'task.done_at'|trans }} : </strong>
-                            <span><i class="fa fa-calendar"></i> {{ task.doneAt|date('Y-m-d h:i:s') }}</span>
-                        {% endif %}
+                        <strong>{{ '' }} : </strong>
+                        <span><i class="fa fa-calendar"></i> {{ '' }}</span>
                     </div>
                     <div class="col-md-6">
-                        {% if task.validatedBy %}
-                            <strong>{{ 'task.validated_by'|trans }} : </strong>
-                            <span><i class="fa fa-user"></i> {{ task.validatedBy.firstName }} {{ task.validatedBy.lastName }} {{ 'entity.at'|trans }} <i class="fa fa-calendar"></i> {{ task.validatedAt|date('Y-m-d h:i:s') }}</span>
-                        {% endif %}
+                        <strong>{{ 'task.validated_by'|trans }} : </strong>
+                        <span><i class="fa fa-user"></i> {{ '' }} {{ '' }} {{ 'entity.at'|trans }} <i class="fa fa-calendar"></i> {{ '' }}</span>
                     </div>
                 </div>
             </div>
@@ -57,7 +52,7 @@
 
     <div class="row">
         <div class="mpblock">
-            <h6>{{ 'token.list'|trans }}</h6>
+            <h6>{{ 'content.list'|trans }}</h6>
             <div class="mpcontent">
                 <table id="tokenedit" class="mpstandard mp-table-ajax" data-url="{{ path('token_edit') }}">
                     <thead>
@@ -71,14 +66,13 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for token in tokens %}
-                        <tr data-id="{{ token.id }}">
-                            <td>{{ token.label }}</td>
-                            <td><a target="_blank" href="https://www.google.com/search?q={{ token.label|url_encode }}">lien google</a></td>
-                            <td data-prop="notif1"><input type="text" value="{{ token.notif1 }}" /></td>
-                            {% if is_granted('ROLE_ADMIN') %}
-                                <td data-prop="notif1_admin"><input type="text" value="{{ token.notif1Admin }}" /></td>
-                            {% endif %}
+                    {% for content in contents %}
+                        <tr data-id="{{ content.id }}">
+                            <td>{{ content.message }}</td>
+                            <td><a target="_blank" href="#">todo google trad</a></td>
+                            {% for answer in content.answers %}
+                                <td data-prop="answer"><input type="text" value="{{ answer.id }}" /></td>
+                            {% endfor %}
                         </tr>
                     {% endfor %}
                     </tbody>

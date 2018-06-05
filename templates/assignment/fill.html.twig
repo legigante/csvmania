@@ -1,0 +1,21 @@
+{% extends 'layouts/admin.html.twig' %}
+
+{% block title %}{{ 'entity.Content.add'|trans }}{% endblock %}
+
+{% block content %}
+
+    {% for flashMessage in app.session.flashbag.get('success') %}
+        <div class="alert alert-success">{{ flashMessage|trans }}</div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('danger') %}
+        <div class="alert alert-danger">{{ flashMessage|trans }}</div>
+    {% endfor %}
+
+    <div>{{ 'entity.Content.label'|trans }} : {{ data.message }}</div>
+    <i>{{ ('entity.Feeling.helper'~data.feeling_id)|trans }}</i>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+
+{% endblock %}

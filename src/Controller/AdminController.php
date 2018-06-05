@@ -5,6 +5,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 
+use App\Entity\Task;
+
 class AdminController extends Controller
 {
 
@@ -23,6 +25,19 @@ class AdminController extends Controller
      */
     public function tasks()
     {
+
+        // Tasks repository
+        $rep = $this->getDoctrine()->getRepository(Task::class);
+
+        // tâche en cours prog bar (x/x piochée) (x/x saisie)
+        // possibilité changer priorité
+
+        // get assigned tasks done (if admin)
+        $toValidateTasks = [];
+        if ($authChecker->isGranted('ROLE_ADMIN')) {
+            //$toValidateTasks = $rep->getToValidateTasks($user->getId());
+        }
+
         return $this->render('admin/index.html.twig', array(
 
         ));

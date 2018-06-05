@@ -4,13 +4,13 @@ namespace App\Form\Type;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
-class CsvType extends AbstractType
+class FeelingType extends AbstractType
 {
     public function getParent()
     {
-        return TextType::class;
+        return IntegerType::class;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

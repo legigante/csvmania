@@ -5,14 +5,14 @@
             <input type="text" id="{{ id }}_month" name="{{ full_name }}[month]" value="{{ data|date('n') }}" />
             <input type="text" id="{{ id }}_year" name="{{ full_name }}[year]" value="{{ data|date('Y') }}" />
         </div>
-        <input value="{{ data|date('Y-m-d') }}" name="{{ id }}" class="flatpickr form-control" type="text" placeholder="2011-12-24" {{ required ? 'required="required"' : '' }} data-input>
+        <input value="{{ data|date('Y-m-d') }}" name="{{ id }}" class="flatpickr form-control" type="text" placeholder="2011-12-24" {{ required ? 'required="required"' : '' }} data-input />
     </div>
 {% endblock %}
-
 
 {% block csv_widget %}
     <div class="form-group dndFile">
         <textarea id="{{ id }}" name="{{ full_name }}" class="hidden" {{ required ? 'required="required"' : '' }}>{{ data }}</textarea>
+        <input id="tt" class="hidden" type="file" />
         {% if errors|length > 0 %}
             <span>{{ error.message }}</span>
         {% endif %}
@@ -25,6 +25,27 @@
     </div>
 {% endblock %}
 
+{% block fields_widget %}
+    <div class="form-group mpFields">
+        <select id="{{ id }}" name="{{ full_name }}" multiple="multiple" class="hidden" {{ required ? 'required="required"' : '' }}>
+            {% for choice in choices %}
+                <option selected="selected" value="{{ choice.value }}">{{ choice.label }}</option>
+            {% endfor %}
+        </select>
+        <div class="mpFieldsUI form-control">
+            {% for choice in choices %}
+                <span class="badge badge-success">{{ choice.label }}</span>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block feeling_widget %}
+    <div class="form-group">
+        <strong>todo faire une jauge + input caché et mettre helper dans label + remettre is_campaign en 1</strong>
+        <input value="{{ data }}" name="{{ id }}" {{ required ? 'required="required"' : '' }} data-input />
+    </div>
+{% endblock %}
 
 {% block submit_widget %}
     <div class="form-group text-center">

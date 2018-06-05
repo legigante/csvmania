@@ -40,6 +40,7 @@ $(function () {
             this.setData = function(data64){
                 var data = atob(data64);
                 if(/^([^\r\n]*);([^\r\n;]+)$/gm.test(data)){
+                    console.log(data)
                     var nbRow = (data.match(/[\r\n]/g) || []).length;
                     dndTextarea.value = data64;
                     var span = dndHolder.getElementsByTagName('span')[1];
@@ -65,9 +66,13 @@ $(function () {
             // group element
             dndFile = dndFile[0];
 
-            // find form
+            // find form and hidden input file
             var dndForm = dndFile.parentElement;
+            var dndInputFile = null;
             while(dndForm.tagName.toUpperCase() != 'FORM'){
+                if(dndInputFile == null && dndForm.className.indexOf('form-group') >= 0){
+                    dndInputFile = dndForm.getElementsByTagName('input')[0];
+                }
                 dndForm = dndForm.parentElement;
             }
 
@@ -105,6 +110,13 @@ $(function () {
                 }else{
                     return false;
                 }
+            };
+            dndHolder.onclick = function(){
+                dndInputFile.click();
+            }
+
+            dndInputFile.onchange = function() {
+                that.readFile(this.files);
             }
 
             // find textarea
@@ -145,12 +157,12 @@ $(function () {
      */
     const fp = flatpickr(".flatpickr", {
         locale: document.documentElement.lang,
-        allowInput: true,
+        allowInput: false,
         // on met à jour les champs cachés à la sélection d'une date
         onChange: function(selectedDates, dateStr, instance){
             var d = selectedDates[0];
             var elName = instance.input.name;
-            document.getElementById(elName+'_day').value = d.getDay();
+            document.getElementById(elName+'_day').value = d.getDate();
             document.getElementById(elName+'_month').value = d.getMonth()+1;
             document.getElementById(elName+'_year').value = d.getFullYear();
         }
@@ -167,13 +179,10 @@ $(function () {
     function oProgressBar(selector){
 
         this.draw = function(el){
-            console.log('draw');
-            console.log(el.getAttribute('aria-valuenow'));
-            console.log(el.getAttribute('aria-valuemax'));
+
             var w = Math.round(100*(el.getAttribute('aria-valuenow')/el.getAttribute('aria-valuemax'))*100)/100;
-            console.log(w);
             el.style.width = w+'%';
-            el.innerHTML = w+'%';
+            el.innerHTML = '<span>' + w + '%</span>';
             el.parentElement.setAttribute('data-original-title', el.getAttribute('aria-valuenow') + '/' + el.getAttribute('aria-valuemax'));
             if(w==100){
                 el.style.backgroundColor = '#5bcc36';
@@ -183,18 +192,16 @@ $(function () {
             if(w==0){
                 el.style.color = 'black';
             }else{
-                el.style.color = 'white';
+                el.style.color = 'black';
             }
+
         }
 
 
 
         this.updateBar = function(id, i){
-            console.log('updbar');
             var el = document.getElementById(id);
-            console.log(el.getAttribute('aria-valuenow'));
             el.setAttribute('aria-valuenow', parseInt(el.getAttribute('aria-valuenow')) + i);
-            console.log(el.getAttribute('aria-valuenow'));
             this.draw(el);
         }
 
@@ -216,7 +223,7 @@ $(function () {
 
 
 
-    /* tooltype */
+    /* bootstrap tooltype */
     $('.mptooltype').tooltip();
 
 
@@ -293,6 +300,43 @@ $(function () {
 
 
 
+
+
+    /* !!! ne marche qu'avec un seul élément
+     * class pour gérer les interaction entre le form type Fields et le user
+     * en gros on click sur un label, ça coche/décoche la checkbox cachée
+     */
+    function ompFields(selector){
+
+        function getElPosition(child, parent, tag){
+            var children = parent.getElementsByTagName(tag);
+            var i =0;
+            while(i<children.length){
+                if(child == children[i]){
+                    return i;
+                }
+                i++;
+            }
+        }
+
+        var el = document.getElementsByClassName(selector);
+        if(el.length){
+            el = el[0];
+            var hiddenCBs = el.getElementsByTagName('option');
+            var ui = el.getElementsByClassName('mpFieldsUI')[0];
+            var labels = ui.getElementsByTagName('span');
+            var i = 0;
+            while(i<labels.length){
+                labels[i].onclick = function(){
+                    var n = getElPosition(this, ui, 'span');
+                    hiddenCBs[n].selected = !hiddenCBs[n].selected;
+                    this.className = hiddenCBs[n].selected ? 'badge badge-success' : 'badge badge-secondary';
+                }
+                i++;
+            }
+        }
+    }
+    var oMPF = new ompFields('mpFields');
 
 
 

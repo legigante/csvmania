@@ -10,6 +10,10 @@ $navbar-inverse-color: white;
 $navbar-inverse-bg: black;
 $navbar-inverse-border: none;
 
+// couleurs
+$c_green: #5bcc36;
+$c_red: #cc2323;
+$c_orange: #cc562b;
 
 
 
@@ -92,11 +96,11 @@ nav .navbar-toggle:hover{
 
 
 .form-error-message{
-  color: #ff4036;
+  color: $c_orange;
 }
 
 .badge-danger{
-  background-color: #cc562b;
+  background-color: $c_orange;
 }
 
 .form-group legend{
@@ -157,17 +161,17 @@ footer a:hover{
 }
 .dndFile .dndsuccess,
 .dndFile .dndhover{
-  border: 10px dashed #5bcc36 !important;
+  border: 10px dashed $c_green !important;
   background-color: #baccc5 !important;
 }
 .dndFile .dndbadformat,
 .dndFile .dndrequired{
-  border: 10px dashed #cc562b !important;
+  border: 10px dashed $c_orange !important;
   background-color: #ccb4b0 !important;
 }
 .dndFile .dndholder span{
   display: none;
-  margin-top: 30px;
+  margin-top: 25px;
   font-weight: bold;
 }
 .dndFile .dnddefault span:first-child,
@@ -183,11 +187,19 @@ footer a:hover{
   width: 125px;
   display: inline-table;
 }
+.progress{
+  margin-bottom: 0px;
+}
+.progress-bar > span{
+  padding-left: 5px;
+}
+.prio1{
+  font-weight: bold;
+  color: $c_orange;
+}
 
 
-
-
-.mpblock > h6{
+.mpblock > h4{
   border-bottom: 1px dashed white;
   margin: 0;
   padding: 3px 5px;
@@ -201,6 +213,13 @@ footer a:hover{
 .mpcontent{
   padding: 8px 10px;
 }
+.mpcontent h5{
+  text-align: center;
+  margin: 3px 0;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
 .mpblock h1 .bars{
   display: inline-block;
 }
@@ -218,9 +237,8 @@ footer a:hover{
 }
 .mpssblock > .mpcontent:hover{
   cursor: pointer;
-  background-color: #a6a6a6;
   text-decoration: none;
-  color: #efefef;
+  background: radial-gradient(ellipse at center, #c5c5c5, #9d9d9d);
 }
 
 
@@ -252,3 +270,19 @@ table.mpstandard{
 
 
 
+input.flatpickr[readonly]{
+  background-color: white!important;
+}
+
+
+/* fields form type */
+.mpFields .badge{
+  cursor: pointer;
+}
+
+.badge-success{
+  background-color: $c_green;
+}
+.badge-danger{
+  background-color: $c_orange;
+}

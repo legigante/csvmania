@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 
@@ -64,25 +65,25 @@ class User implements AdvancedUserInterface, \Serializable
     private $created_tasks;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Task", mappedBy="assigned_to")
-     */
-    private $assigned_tasks;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Task", mappedBy="validated_by")
-     */
-    private $validated_tasks;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     private $active;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Assignment", mappedBy="assigned_to", orphanRemoval=true)
+     */
+    private $assignedAssignments;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Assignment", mappedBy="validated_by")
+     */
+    private $validatedAssignments;
+
     public function __construct()
     {
         $this->created_tasks = new ArrayCollection();
-        $this->assigned_tasks = new ArrayCollection();
-        $this->validated_tasks = new ArrayCollection();
+        $this->assignedAssignments = new ArrayCollection();
+        $this->validatedAssignments = new ArrayCollection();
     }
 
     public function getId()
@@ -225,68 +226,6 @@ class User implements AdvancedUserInterface, \Serializable
         return $this;
     }
 
-    /**
-     * @return Collection|Task[]
-     */
-    public function getAssignedTasks(): Collection
-    {
-        return $this->assigned_tasks;
-    }
-
-    public function addAssignedTask(Task $assignedTask): self
-    {
-        if (!$this->assigned_tasks->contains($assignedTask)) {
-            $this->assigned_tasks[] = $assignedTask;
-            $assignedTask->setAssignedTo($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAssignedTask(Task $assignedTask): self
-    {
-        if ($this->assigned_tasks->contains($assignedTask)) {
-            $this->assigned_tasks->removeElement($assignedTask);
-            // set the owning side to null (unless already changed)
-            if ($assignedTask->getAssignedTo() === $this) {
-                $assignedTask->setAssignedTo(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Task[]
-     */
-    public function getValidatedTasks(): Collection
-    {
-        return $this->validated_tasks;
-    }
-
-    public function addValidatedTask(Task $validatedTask): self
-    {
-        if (!$this->validated_tasks->contains($validatedTask)) {
-            $this->validated_tasks[] = $validatedTask;
-            $validatedTask->setValidatedBy($this);
-        }
-
-        return $this;
-    }
-
-    public function removeValidatedTask(Task $validatedTask): self
-    {
-        if ($this->validated_tasks->contains($validatedTask)) {
-            $this->validated_tasks->removeElement($validatedTask);
-            // set the owning side to null (unless already changed)
-            if ($validatedTask->getValidatedBy() === $this) {
-                $validatedTask->setValidatedBy(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getActive(): ?bool
     {
         return $this->active;
@@ -357,6 +296,68 @@ class User implements AdvancedUserInterface, \Serializable
     public function isEnabled()
     {
         return $this->active;
+    }
+
+    /**
+     * @return Collection|Assignment[]
+     */
+    public function getAssignments(): Collection
+    {
+        return $this->assignedAssignments;
+    }
+
+    public function addAssignment(Assignment $assignment): self
+    {
+        if (!$this->assignedAssignments->contains($assignment)) {
+            $this->assignedAssignments[] = $assignment;
+            $assignment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssignment(Assignment $assignment): self
+    {
+        if ($this->assignedAssignments->contains($assignment)) {
+            $this->assignedAssignments->removeElement($assignment);
+            // set the owning side to null (unless already changed)
+            if ($assignment->getUser() === $this) {
+                $assignment->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Assignment[]
+     */
+    public function getValidatedAssignments(): Collection
+    {
+        return $this->validatedAssignments;
+    }
+
+    public function addValidatedAssignment(Assignment $validatedAssignment): self
+    {
+        if (!$this->validatedAssignments->contains($validatedAssignment)) {
+            $this->validatedAssignments[] = $validatedAssignment;
+            $validatedAssignment->setValidatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeValidatedAssignment(Assignment $validatedAssignment): self
+    {
+        if ($this->validatedAssignments->contains($validatedAssignment)) {
+            $this->validatedAssignments->removeElement($validatedAssignment);
+            // set the owning side to null (unless already changed)
+            if ($validatedAssignment->getValidatedBy() === $this) {
+                $validatedAssignment->setValidatedBy(null);
+            }
+        }
+
+        return $this;
     }
 
 
