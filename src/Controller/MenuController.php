@@ -45,25 +45,23 @@ class MenuController extends Controller
         return $this->render('app/about.html.twig');
     }
 
-
-
     /**
      * @Route("/language/{code}", name="language", requirements={"code"="fr|en|es"})
      * @return Response
      */
-    public function language ($code)
+    public function language (Request $request, $code)
     {
-        // session serveur
+        // on redirigera vers là où on était
+        $lastRoad = $request->headers->get('referer');
+
+        // on set session serveur
         $this->get('session')->set('_locale', $code);
 
-        // cookie client
+        // on set cookie client et on redirige vers accueil
         $response = new Response('',307);
         $response->headers->setCookie(new Cookie('locale', $code, strtotime('now + 60 minutes')));
-        $response->headers->set('location','/login');
-        //$response->isRedirect('/login');
+        $response->headers->set('location',$lastRoad);
         return $response;
 
-        // redirection
-        //return $this->redirectToRoute('home');
     }
 }

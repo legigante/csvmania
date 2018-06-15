@@ -5,9 +5,11 @@
     <link rel="stylesheet" href="{{ asset('build/admin.css') }}">
 {% endblock %}
 
-{% block body %}
+{% block menu %}
+    {{ parent() }}
+{% endblock %}
 
-    <h1>On est dans le template <strong>admin</strong> du site</h1>
+{% block body %}
 
     {% block content %}
 

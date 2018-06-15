@@ -5,6 +5,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 
+use App\Entity\Task;
+
 class AdminController extends Controller
 {
 
@@ -23,6 +25,10 @@ class AdminController extends Controller
      */
     public function tasks()
     {
+
+        // Tasks repository
+        $repTask = $this->getDoctrine()->getRepository(Task::class);
+
         return $this->render('admin/index.html.twig', array(
 
         ));
