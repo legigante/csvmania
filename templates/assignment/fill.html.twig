@@ -11,11 +11,20 @@
         <div class="alert alert-danger">{{ flashMessage|trans }}</div>
     {% endfor %}
 
-    <div>{{ 'entity.Content.label'|trans }} : {{ data.message }}</div>
-    <i>{{ ('entity.Feeling.helper'~data.feeling_id)|trans }}</i>
+    <div class="mpblock row">
+        <h4>{{ 'entity.Content.label'|trans }}</h4>
+        <div class="mpcontent">
+            <div class="content-message">{{ content.message }}</div>
+        </div>
+    </div>
 
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    {{ form_end(form) }}
+    <div class="mpblock row">
+        <h4>{{ feeling.label|capitalize }} <i class="fa fa-question-circle mptooltype" data-original-title="{{ ('entity.Feeling.helper'~feeling.id)|trans }}"></i></h4>
+        <div class="mpcontent">
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            {{ form_end(form) }}
+        </div>
+    </div>
 
 {% endblock %}

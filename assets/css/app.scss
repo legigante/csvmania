@@ -14,6 +14,7 @@ $navbar-inverse-border: none;
 $c_green: #5bcc36;
 $c_red: #cc2323;
 $c_orange: #cc562b;
+$c_blue: #6678cc;
 
 
 
@@ -25,7 +26,7 @@ $fa-font-path: "~font-awesome/fonts";
 @import '~bootstrap-sass/assets/stylesheets/bootstrap';
 @import "~font-awesome/scss/font-awesome.scss";
 @import "~flatpickr/dist/flatpickr.css";
-
+@import "~rangeslider.js/dist/rangeslider.css";
 
 
 
@@ -38,6 +39,7 @@ nav{
   width: 100%;
   position: fixed;
   top: 0;
+  z-index: 99999;
 }
 nav .container-fluid{
   border-bottom: 1px solid white !important;
@@ -285,4 +287,31 @@ input.flatpickr[readonly]{
 }
 .badge-danger{
   background-color: $c_orange;
+}
+
+
+.slider-g{
+  float: left;
+}
+.slider-d{
+  float: right;
+}
+.rangeslider{
+  background: linear-gradient(to left, #5bcc36, #cc562b);
+}
+
+
+
+
+
+
+
+.content-message{
+  border: 1px solid black;
+  border-radius: 8px;
+  background-color: $c_blue;
+  padding: 5px 15px;
+  margin: 5px auto;
+  color: white;
+  font-weight: bold;
 }

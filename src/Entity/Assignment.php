@@ -59,7 +59,7 @@ class Assignment
     /**
      * @ORM\Column(type="smallint")
      */
-    private $status;
+    private $status = 0;
 
     public function __construct()
     {

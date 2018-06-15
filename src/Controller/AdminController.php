@@ -27,16 +27,7 @@ class AdminController extends Controller
     {
 
         // Tasks repository
-        $rep = $this->getDoctrine()->getRepository(Task::class);
-
-        // tâche en cours prog bar (x/x piochée) (x/x saisie)
-        // possibilité changer priorité
-
-        // get assigned tasks done (if admin)
-        $toValidateTasks = [];
-        if ($authChecker->isGranted('ROLE_ADMIN')) {
-            //$toValidateTasks = $rep->getToValidateTasks($user->getId());
-        }
+        $repTask = $this->getDoctrine()->getRepository(Task::class);
 
         return $this->render('admin/index.html.twig', array(
 

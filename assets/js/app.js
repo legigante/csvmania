@@ -5,6 +5,11 @@
 // librairies
 //var $ = require('jquery');
 require('bootstrap-sass');
+
+// slider
+require('rangeslider.js');
+
+// date picker
 require('flatpickr');
 require('flatpickr/dist/l10n/fr.js');
 require('flatpickr/dist/l10n/es.js');
@@ -227,8 +232,27 @@ $(function () {
     $('.mptooltype').tooltip();
 
 
+    // slider
+    function RS_upd_color(val, left, right){
+        var r1 = 204+(204-194)*(1-val/100);
+        var g1 = 86+(204-86)*(val/100);
+        var b1 = 54+(54-43)*(1-val/100);
+        var r2 = 91+(204-91)*(1-val/100);
+        var g2 = 204+(204-204)*(val/100);
+        var b2 = 54+(54-54)*(val/100);
+        left.css('background', 'linear-gradient(to right, rgb('+r1+','+g1+','+b1+'), rgb('+r2+','+g2+','+b2+')');
+        //right.css('background', 'linear-gradient(to left, #5bcc36, #cc562b)');
+    }
 
-
+    $('input[type="range"]').rangeslider({
+        polyfill: false,
+        onInit: function(){
+            RS_upd_color(50, this.$fill, this.$range);
+        },
+        onSlide: function(pos, val){
+            RS_upd_color(val, this.$fill, this.$range);
+        }
+    });
 
 
 

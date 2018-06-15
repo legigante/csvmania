@@ -47,7 +47,7 @@ class TaskController extends Controller
         return $this->render('task/index.html.twig', [
             'nbTodoTasks' => $nbTodoTasks,
             'ongoingAssignments' => $ongoingAssignments,
-            'nextTodoTasks' => $nextTodoTasks,
+            'nextTodoTasks' => $nextTodoTasks
         ]);
 
     }
@@ -77,16 +77,24 @@ class TaskController extends Controller
 
         // if task status = 0
         if($task->getStatus() == 0){
-            // if not already assigned
+            // if not already assigned to user
             if(!$repAssignment->isAlreadyAssigned($id,$user_id)){
                 // create new assignment
                 $assignment = new Assignment();
                 $assignment->setAssignedAt(new \DateTime());
                 $assignment->setAssignedTo($user);
                 $assignment->setTask($task);
+                $task->addAssignment($assignment);
+
+                // si on a atteind l'objectif d'assignement on passe ne status 1=en cours de saisie
+                $nbAssignments = $repAssignment->getNbAssignmentForTask($task->getId());
+                if($nbAssignments+1 >= $task->getNbAnswerNeeded()){
+                    $task->setStatus(1);
+                }
 
                 // on stock en base
                 $em->persist($assignment);
+                $em->persist($task);
                 $em->flush();
 
                 // on renvoi à la saisie

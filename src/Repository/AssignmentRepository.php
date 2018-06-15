@@ -20,7 +20,28 @@ class AssignmentRepository extends ServiceEntityRepository
     }
 
 
+    /**
+     * get nb answers, contents and fields
+     * @param $assignment_id
+     * @return mixed
+     */
+    public function getAssignmentProgressionDone($assignment_id){
 
+        $qb = $this->createQueryBuilder('a')
+            ->innerJoin('a.task', 't')
+            ->leftJoin('a.answers', 'w')
+            ->select('COUNT(DISTINCT w.id) AS nb_answers')
+            ->innerJoin('t.contents', 'c')
+            ->addSelect('COUNT(DISTINCT c.id) AS nb_contents')
+            ->innerJoin('t.fields', 'f')
+            ->addSelect('COUNT(DISTINCT f.id) AS nb_fields')
+            ->andWhere('a.id = :assignment_id')
+            ->setParameter(':assignment_id', $assignment_id)
+            ->groupBy('a.id')
+            ->getQuery();
+        return $qb->getSingleResult();
+
+    }
 
 
     /**
@@ -52,7 +73,58 @@ class AssignmentRepository extends ServiceEntityRepository
     }
 
 
+    /**
+     * get nb assignments attached to task
+     * @param $task_id
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getNbAssignmentForTask($task_id){
 
+        $qb = $this->createQueryBuilder('a')
+            ->select('COUNT(1) AS NB')
+            ->where('a.task = :task_id')
+            ->setParameter(':task_id', $task_id)
+            ->getQuery();
+
+        return $qb->getSingleScalarResult();
+    }
+
+    /**
+     * get nb done (status > 0) assignments attached to task
+     * @param $task_id
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getNbDoneAssignmentForTask($task_id){
+
+        $qb = $this->createQueryBuilder('a')
+            ->select('COUNT(1) AS NB')
+            ->where('a.task = :task_id')
+            ->andWhere('a.status > 0')
+            ->setParameter(':task_id', $task_id)
+            ->getQuery();
+
+        return $qb->getSingleScalarResult();
+    }
+
+    /**
+     * get nb validated (status > 1) assignments attached to task
+     * @param $task_id
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getNbValidatedAssignmentForTask($task_id){
+
+        $qb = $this->createQueryBuilder('a')
+            ->select('COUNT(1) AS NB')
+            ->where('a.task = :task_id')
+            ->andWhere('a.status > 1')
+            ->setParameter(':task_id', $task_id)
+            ->getQuery();
+
+        return $qb->getSingleScalarResult();
+    }
 
 
 
@@ -81,29 +153,6 @@ class AssignmentRepository extends ServiceEntityRepository
     }
 
 
-    /**
-     * get next field to entry
-     * @param $assignment_id
-     * @return mixed
-     */
-    public function getNextEntry($assignment_id){
-        $qb = $this->createQueryBuilder('a')
-            ->select('a.id AS assignment_id, c.id AS content_id, f.id AS field_id, fe.id AS feeling_id, c.message, fe.label, fe.format')
-            ->innerJoin('a.task', 't')
-            ->innerJoin('t.fields', 'f')
-            ->innerJoin('f.feeling', 'fe')
-            ->innerJoin('t.contents', 'c')
-            ->leftJoin('f.answers', 'an')
-            ->andWhere('an.id IS NULL')
-            ->andWhere('a.id = :assingment_id')
-            ->addOrderBy('f.id','ASC')
-            ->addOrderBy('c.id','ASC')
-            ->setParameter('assingment_id', $assignment_id)
-            ->setMaxResults(1)
-            ->getQuery();
-
-        return $qb->getResult();
-    }
 
 
 

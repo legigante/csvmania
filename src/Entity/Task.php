@@ -281,35 +281,6 @@ class Task
 
 
 
-    public function getNbAssigned(){
-        return count($this->getAssignments());
-    }
-    public function getNbDone(){
-        $r = 0;
-        foreach ($this->getAssignments() as $assignment) {
-            if($assignment->getDoneAt() != null){
-                $r++;
-            }
-        }
-        return $r;
-    }
-    public function getNbValidated(){
-        $r = 0;
-        foreach ($this->getAssignments() as $assignment) {
-            if($assignment->getValidatedAt() != null){
-                $r++;
-            }
-        }
-        return $r;
-    }
-    public function getNbMessages(){
-        return count($this->getContents());
-    }
-    public function getNbFeelings()
-    {
-        return count($this->getFields());
-    }
-
 
 
 }

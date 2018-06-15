@@ -6,12 +6,19 @@ admin:
     home: Dashboard
 
 dnd_file:
-    drop_zone: Cliquer ou faire glisser un fichier ici
     bad_format: Mauvais format, il nous faut du csv !
+    drop_zone: Cliquer ou faire glisser un fichier ici
+    file: Fichier csv
     success: Fichier uploadé dans le cache (%n lignes)
 
 entity:
     Answer:
+        flash:
+            already_answered: Déjà répondu
+            assignment_done: Tâche terminée
+            bad_field: Ce champs n'est pas à répondre
+            entry_saved: Saisie validée
+            mandatory: La saisie ne peut pas être vide
         label: Réponse
         list: Liste des réponses
         value: Réponse
@@ -31,6 +38,10 @@ entity:
         nb_answers: Nb réponses
         nb_fields: Nb champs
         nb_contents: Nb messages
+        status: Statut
+        status0: Saisie en cours
+        status1: Saisie à valider
+        status2: Validée
         validated_at: Validée le
         validated_by: Validée par
 
@@ -46,6 +57,8 @@ entity:
         helper3: Nombre de questions
         helper4: 1 si le mail est écrit par un humain, 0 sinon
         helper5: Plus la jauge est remplie, plus l'auteur vous semble intéressé par la campagne
+        helper5min: Pas du tout interessé
+        helper5max: Très interessé
         helper6: 1 si l'auteur souhaite être recontacter plus tard, 0 sinon
         helper7: 1 si l'auteur souhaite se désabonner, 0 sinon
         helper8: 1 si l'auteur est interessé par la campagne, 0 sinon
@@ -85,14 +98,15 @@ entity:
         priority3: Faible
         show: Voir la tâche
         status: Statut
-        status0: Tâche non assignée
+        status0: Tâche à assigner
         status1: Tâche en cours
         status2: Tâche à valider
         status3: Tâche validée
-        to_assigne_tasks: Tâches à assigner
+        to_assign_tasks: Tâches à assigner
         todo_tasks: Tâches à saisir
         to_validate_tasks: Tâches à valider
         upd: Modifier une tâche
+        validate: Valider une tâche
 
     User:
         active: Actif
@@ -109,10 +123,13 @@ entity:
 form:
     back: Retour
     cancel: Annuler
+    empty: ""
+    no: Non
     required: Ce champs est obligatoire
     reset: Réinitialiser
     submit: Valider
     unauthorized: Action non autorisée
+    yes: Oui
 
 list:
     filter: Filtre
@@ -124,7 +141,7 @@ menu:
     about: A propos
     language:
         label: Langues
-        en: Englais
+        en: Anglais
         es: Espagnol
         fr: Français
     tasks: Mes tâches

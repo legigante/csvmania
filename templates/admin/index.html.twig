@@ -3,15 +3,39 @@
 {% block title %}{{ 'admin.home'|trans }}{% endblock %}
 
 {% block content %}
-    <h1>todo list</h1>
-    <ul>
-        <li>Finir formulaire création tâche</li>
-        <li>liste tâche à valider</li>
-        <li>% des tâches en court + clickable pour aller voir la tâche</li>
-        <li>timeline tâche en cours</li>
-        <li>visu csv user</li>
-    </ul>
 
-    <a href="{{ path('add_task') }}" class="btn btn-primary" role="button" title="{{ 'task.add'|trans }}">{{ 'task.add'|trans }}</a>
+
+    <div class="mpblock row">
+        <h4>{{ 'entity.Task.add'|trans }}</h4>
+        <div class="mpcontent">
+            <a href="{{ path('add_task') }}" class="btn btn-primary" role="button" title="{{ 'entity.Task.add'|trans }}">{{ 'entity.Task.add'|trans }}</a>
+        </div>
+    </div>
+
+    <div class="mpblock row">
+        <h4>{{ 'entity.Task.to_validate_tasks'|trans }}</h4>
+        <div class="mpcontent">
+            <h5>todo fusion ?</h5>
+        </div>
+    </div>
+
+    <div class="mpblock row">
+        <h4>{{ 'entity.Task.todo_tasks'|trans }}</h4>
+        <div class="mpcontent">
+            <h5>todo fusion ?</h5>
+        </div>
+    </div>
+
+    <div class="mpblock row">
+        <h4>Todo : </h4>
+        <div class="mpcontent">
+            <ul>
+                <li>Création tâche : <span class="label label-success">ok</span></li>
+                <li>Liste tâche à valider : <span class="label label-info">todo: fusionner tout = les tâches dans l'ordre avec code couleur status ? bonhomme pour assignments ?</span></li>
+                <li>Suivi des tâches en cours + update de la priorité : <span class="label label-info">todo: fusion ?</span></li>
+                <li>timeline stylé ? : <span class="label label-warning">todo</span></li>
+            </ul>
+        </div>
+    </div>
 
 {% endblock %}

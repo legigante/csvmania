@@ -41,14 +41,14 @@
 {% endblock %}
 
 {% block feeling_widget %}
-    <div class="form-group">
-        <strong>todo faire une jauge + input caché et mettre helper dans label + remettre is_campaign en 1</strong>
-        <input value="{{ data }}" name="{{ id }}" {{ required ? 'required="required"' : '' }} data-input />
+    <div class="form-group text-center">
+        <input id="{{ id }}" type="range" min="0" max="100" value="{{ data }}" name="{{ full_name }}" {{ required ? 'required="required"' : '' }} data-input />
+        <span class="slider-g">{{ 'entity.Feeling.helper5min'|trans }}</span><span class="slider-d">{{ 'entity.Feeling.helper5max'|trans }}</span>
     </div>
 {% endblock %}
 
 {% block submit_widget %}
     <div class="form-group text-center">
-        <input class="btn btn-primary" value="{{ 'admin.submit'|trans }}" type="submit" />
+        <input class="btn btn-primary" value="{{ 'form.submit'|trans }}" type="submit" />
     </div>
 {% endblock %}
