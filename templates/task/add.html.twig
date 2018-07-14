@@ -4,12 +4,19 @@
 
 {% block content %}
 
-    <ul>
-        <li>controler csv</li>
-    </ul>
-
     {{ form_start(form) }}
     {{ form_widget(form) }}
     {{ form_end(form) }}
 
+    <div class="mpblock row">
+        <h4>Todo : </h4>
+        <div class="mpcontent">
+            <ul>
+                <li>Améliorer contrôle du csv <span class="label label-warning">todo</span></li>
+                <li>Pouvoir créer un feeling <span class="label label-warning">todo</span></li>
+            </ul>
+        </div>
+    </div>
+
 {% endblock %}
+

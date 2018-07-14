@@ -134,6 +134,7 @@ form:
 list:
     filter: Filtre
     list: Liste
+    none: Aucun
     page: Page
     sort: Tri
 

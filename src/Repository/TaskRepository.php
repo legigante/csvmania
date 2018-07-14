@@ -28,6 +28,48 @@ class TaskRepository extends ServiceEntityRepository
 
 
 
+
+
+    public function getDashboard($nbMaxTasks){
+
+        $r = $this->createQueryBuilder('t')
+            ->innerJoin('t.assignments', 'a')
+            ->addSelect('a')
+            ->innerJoin('a.assigned_to', 'u')
+            ->addSelect('u')
+            ->innerJoin('t.contents', 'c')
+            ->addSelect('COUNT(DISTINCT c.id) AS nb_contents')
+            ->innerJoin('t.fields','f')
+            ->addSelect('COUNT(DISTINCT f.id) AS nb_fields')
+            ->leftJoin('a.answers', 'an')
+            ->addSelect('COUNT(DISTINCT an.id) AS nb_answers')
+            ->groupBy('t.id')
+            ->addGroupBy('a.id')
+            ->orderBy('t.status', 'ASC')
+            ->addOrderBy('t.status', 'ASC')
+            ->setMaxResults($nbMaxTasks)
+            ->getQuery()
+            ->getResult();
+
+        if(empty($r) || $r[0][0] == null){
+            return [];
+        }else{
+            return $r;
+        }
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
     /**
      * check if field id has to be answered regarding to task settings
      * @param $task_id
@@ -112,10 +154,12 @@ class TaskRepository extends ServiceEntityRepository
 
 
 
+
     /**
-     * get nb answers, contents and fields
      * @param $task_id
      * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getTaskProgressionDone($task_id){
 

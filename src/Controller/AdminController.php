@@ -26,11 +26,21 @@ class AdminController extends Controller
     public function tasks()
     {
 
+        $icones = [
+            'text-info',
+            'text-warning',
+            'text-success'
+        ];
+
         // Tasks repository
         $repTask = $this->getDoctrine()->getRepository(Task::class);
+        $dashboardList = $repTask->getDashboard(10);
+
+        dump($dashboardList);
 
         return $this->render('admin/index.html.twig', array(
-
+            'icones' => $icones,
+            'dashboardList' => $dashboardList
         ));
     }
 

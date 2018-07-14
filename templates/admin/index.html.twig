@@ -13,16 +13,53 @@
     </div>
 
     <div class="mpblock row">
-        <h4>{{ 'entity.Task.to_validate_tasks'|trans }}</h4>
+        <h4>{{ 'admin.home'|trans }}</h4>
         <div class="mpcontent">
-            <h5>todo fusion ?</h5>
-        </div>
-    </div>
+            {% for i in icones %}
+                <i class="fa fa-user {{ i }}"></i> {{ ('entity.Assignment.status'~(loop.index-1))|trans }}
+            {% endfor %}
+            <br />
 
-    <div class="mpblock row">
-        <h4>{{ 'entity.Task.todo_tasks'|trans }}</h4>
-        <div class="mpcontent">
-            <h5>todo fusion ?</h5>
+
+            {% if dashboardList |length == 0 %}
+                {{ 'entity.Task.none'|trans }}
+            {%  else %}
+                {% for row in dashboardList %}
+                    <div class="col-md-4 mpssblock">
+                        <a class="mpcontent text-center" href="{{ path('show_task', {id: row.0.id}) }}" title="{{ 'entity.Task.show'|trans }}">
+
+                            <h5>{{ row.0.name }}</h5>
+                            <div class="prio{{ row.0.deadline < "now"|date('Y-m-d') ? '1' : '0' }}">
+                                <i class="fa fa-calendar" ></i>
+                                <span>{{ 'entity.Task.deadline'|trans }} : {{ row.0.deadline|localizeddate('medium', 'none') }}</span>
+                            </div>
+                            <div class="prio{{ row.0.priority }}">
+                                <i class="fa fa-clock-o" ></i>
+                                <span>{{ 'entity.Task.priority'|trans }} : {{ ('entity.Task.priority'~row.0.priority)|trans }}</span>
+                            </div>
+                            <div>
+                                <i class="fa fa-files-o" ></i>
+                                <span>{{ 'entity.Assignment.nb_contents'|trans }} : {{ row.nb_contents }}</span>
+                            </div>
+                            <div>
+                                <i class="fa fa-columns" ></i>
+                                <span>{{ 'entity.Assignment.nb_fields'|trans }} : {{ row.nb_fields }}</span>
+                            </div>
+
+                            <h5>{{ 'entity.Assignment.label'|trans }}</h5>
+                            {% if row.0.assignments|length == 0 %}
+                                {{ 'list.none'|trans }}
+                            {% else %}
+                                {% for assignment in row.0.assignments %}
+                                    <i class="fa fa-user {{ icones[assignment.status] }}" title="{{ ('entity.Assignment.status'~assignment.status)|trans }}"></i> {{ assignment.assignedTo.firstName }} {{ assignment.assignedTo.lastName }}<br />
+                                {% endfor %}
+                            {% endif %}
+
+                        </a>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
         </div>
     </div>
 
@@ -31,7 +68,7 @@
         <div class="mpcontent">
             <ul>
                 <li>Création tâche : <span class="label label-success">ok</span></li>
-                <li>Liste tâche à valider : <span class="label label-info">todo: fusionner tout = les tâches dans l'ordre avec code couleur status ? bonhomme pour assignments ?</span></li>
+                <li>Liste tâche à valider : <span class="label label-info">ongoing</span></li>
                 <li>Suivi des tâches en cours + update de la priorité : <span class="label label-info">todo: fusion ?</span></li>
                 <li>timeline stylé ? : <span class="label label-warning">todo</span></li>
             </ul>
