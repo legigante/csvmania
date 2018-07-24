@@ -30,6 +30,18 @@ $fa-font-path: "~font-awesome/fonts";
 
 
 
+
+.curp{
+  cursor: pointer;
+}
+
+
+body{
+  background-color: #9d9d9d!important;
+}
+
+
+
 header{
   min-height: 50px;
   margin-bottom: 25px;
@@ -322,3 +334,32 @@ input.flatpickr[readonly]{
 .mpFieldsUI{
   height: inherit;
 }
+
+
+
+
+
+
+.fa-clickme{
+  color: #5b8de4;
+  cursor: pointer;
+}
+.fa-clickme:hover{
+  color: #55c1de;
+}
+
+
+
+
+
+
+.mpWrite input{
+  transition: background-color 0.5s ease;
+}
+
+
+.d-none{
+  display: none;
+}
+
+

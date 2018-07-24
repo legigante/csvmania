@@ -15,10 +15,12 @@ class KernelListener
 
     }
 
+
+
     /**
      * @param GetResponseEvent $event
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest( GetResponseEvent $event)
     {
         // get request
         $request = $event->getRequest();
@@ -28,7 +30,7 @@ class KernelListener
         if ($cookie->has('locale')){
             $locale = $cookie->get('locale');
         }else{
-            $locale = $request->getSession()->get('_locale', 'en');
+            $locale = $request->getSession()->get('_locale', 'fr');
         }
         $request->setLocale($locale);
     }

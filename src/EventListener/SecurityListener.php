@@ -43,10 +43,13 @@ class SecurityListener {
      */
     public function onAuthenticationSuccess( InteractiveLoginEvent $event )
     {
+
         $user = $event->getAuthenticationToken()->getUser();
+        //$event->getRequest()->setLocale($user->getLang());
+        //$this->get('session')->set('_locale', $user->getLang());
+
         $user->razNbFailedConnexion();
         $this->em->persist($user);
         $this->em->flush();
-
     }
 }

@@ -20,10 +20,18 @@ class AssignmentRepository extends ServiceEntityRepository
     }
 
 
+
+
+
+
+
+
     /**
      * get nb answers, contents and fields
      * @param $assignment_id
      * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getAssignmentProgressionDone($assignment_id){
 

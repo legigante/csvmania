@@ -123,6 +123,7 @@ entity:
 form:
     back: Retour
     cancel: Annuler
+    edit: Modifier
     empty: ""
     no: Non
     required: Ce champs est obligatoire
@@ -132,6 +133,7 @@ form:
     yes: Oui
 
 list:
+    download: Télécharger
     filter: Filtre
     list: Liste
     none: Aucun

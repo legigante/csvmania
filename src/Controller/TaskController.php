@@ -11,6 +11,7 @@ use App\Entity\Task;
 use App\Entity\Assignment;
 use App\Entity\Field;
 use App\Form\Type\TaskType;
+use App\Form\Type\TaskEditType;
 use App\Entity\Content;
 
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -122,22 +123,84 @@ class TaskController extends Controller
      */
     public function show($id){
 
+        $icones = [
+            'text-info',
+            'text-warning',
+            'text-success'
+        ];
+
         $repTask = $this->getDoctrine()->getRepository(Task::class);
 
         // get task
-        $task = $repTask->find($id);
-        // get contents
-        $contents = $task->getContents();
-        // get user assigned to
-        $assignments = $task->getAssignments();
+        $task = $repTask->getTaskAnswers($id);
+        dump($task);
+
+
+
+        $form = $this->createForm(TaskEditType::class, $task);
+
+
+
+        $tbl = [];
+        $cursor = [];
+        foreach ($task->getAssignments() as $assignment) {
+            $cursor[$assignment->getId()] = [0,0];
+        }
+        foreach ($task->getContents() as $content){
+            foreach ($task->getFields() as $field){
+                $row = [
+                    'content'=>$content->getMessage(),
+                    'feeling'=>$field->getFeeling()->getLabel(),
+                    'content_id'=>$content->getId(),
+                    'field_id'=>$field->getId()
+                ];
+                foreach ($task->getAssignments() as $assignment) {
+                    while($cursor[$assignment->getId()][0] < count($assignment->getAnswers()) && $assignment->getAnswers()[$cursor[$assignment->getId()][0]]->getContent()->getId() < $content->getId()){
+                        $cursor[$assignment->getId()][0]++;
+                    }
+                    if($cursor[$assignment->getId()][0] < count($assignment->getAnswers()) && $assignment->getAnswers()[$cursor[$assignment->getId()][0]]->getContent()->getId() == $content->getId()){
+                        while($cursor[$assignment->getId()][0] < count($assignment->getAnswers()) && $assignment->getAnswers()[$cursor[$assignment->getId()][0]]->getField()->getId() < $field->getId()){
+                            $cursor[$assignment->getId()][0]++;
+                        }
+                        if($cursor[$assignment->getId()][0] < count($assignment->getAnswers()) && $assignment->getAnswers()[$cursor[$assignment->getId()][0]]->getField()->getId() == $field->getId()){
+                            $row['answer'.$assignment->getId()] = $assignment->getAnswers()[$cursor[$assignment->getId()][0]]->getValue();
+                            $row['answer_id'.$assignment->getId()] = $assignment->getAnswers()[$cursor[$assignment->getId()][0]]->getId();
+                        }else{
+                            $row['answer'.$assignment->getId()] = '';
+                            $row['answer_id'.$assignment->getId()] = 0;
+                        }
+                    }else{
+                        $row['answer'.$assignment->getId()] = '';
+                        $row['answer_id'.$assignment->getId()] = 0;
+                    }
+                }
+                $tbl[] = $row;
+            }
+        }
+        //dump($tbl);
+
+
 
         return $this->render('task/show.html.twig', array(
             "task"=>$task,
-            "contents"=>$contents,
-            "assignments"=>$assignments
+            'tbl'=>$tbl,
+            'icones'=>$icones,
+            'form'=>$form->createView()
         ));
     }
 
+
+
+
+    /**
+     * @Method("post")
+     * @Route("/task/ajax/upd", name="updAjax_task")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function updAjaxAction(Request $request){
+        return new JsonResponse(array('status' => 1));
+    }
 
 
     /**

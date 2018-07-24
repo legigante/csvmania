@@ -22,14 +22,48 @@ class TaskRepository extends ServiceEntityRepository
     }
 
 
+    /**
+     * @param $task_id
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getTaskAnswers($task_id){
+
+        $r = $this->createQueryBuilder('t')
+            ->innerJoin('t.assignments', 'a')
+            ->addSelect('a')
+            ->innerJoin('a.assigned_to', 'u')
+            ->addSelect('u')
+            ->innerJoin('t.contents', 'c')
+            ->addSelect('c')
+            ->innerJoin('t.fields','f')
+            ->addSelect('f')
+            ->leftJoin('f.answers', 'an', 'WITH', 'an.content = c AND an.assignment = a')
+            ->addSelect('an')
+            ->innerJoin('f.feeling','fe')
+            ->addSelect('fe')
+            ->where('t.id = :task_id')
+            ->orderBy('c.id')
+            ->addOrderBy('f.id')
+            ->setParameter('task_id',$task_id)
+            ->getQuery()
+            ->getSingleResult();
+
+        return $r;
+
+    }
 
 
 
 
 
 
-
-
+    /**
+     *
+     * @param $nbMaxTasks
+     * @return array|mixed
+     */
     public function getDashboard($nbMaxTasks){
 
         $r = $this->createQueryBuilder('t')
@@ -41,8 +75,6 @@ class TaskRepository extends ServiceEntityRepository
             ->addSelect('COUNT(DISTINCT c.id) AS nb_contents')
             ->innerJoin('t.fields','f')
             ->addSelect('COUNT(DISTINCT f.id) AS nb_fields')
-            ->leftJoin('a.answers', 'an')
-            ->addSelect('COUNT(DISTINCT an.id) AS nb_answers')
             ->groupBy('t.id')
             ->addGroupBy('a.id')
             ->orderBy('t.status', 'ASC')
@@ -56,7 +88,6 @@ class TaskRepository extends ServiceEntityRepository
         }else{
             return $r;
         }
-
 
     }
 

@@ -1,10 +1,14 @@
 /**
- * Ici les scripts génériques présents partout
+ * main
  */
 
 // librairies
-//var $ = require('jquery');
 require('bootstrap-sass');
+
+// customed css
+require('../css/app.scss');
+require('../css/login.scss');
+require('../css/admin.scss');
 
 // slider
 require('rangeslider.js');
@@ -14,145 +18,52 @@ require('flatpickr');
 require('flatpickr/dist/l10n/fr.js');
 require('flatpickr/dist/l10n/es.js');
 
-// customed
-require('../css/app.scss');
+// customed libraries
+import MP_dndFile from './MP_dndFile.js';
+import MP_edit from './MP_edit.js';
+import MP_feelings from './MP_feelings.js';
+import MP_tableAjax from './MP_tableAjax.js';
+import MP_progressBar from './MP_progressBar.js';
 
-
+// customed scripts
+require('./login.js');
 
 // on document ready
 $(function () {
 
 
 
+    var oEdit = new MP_edit.MP_edit('task-gen');
 
 
 
+    var oDND = new MP_dndFile.MP_dndFile('dndFile');
 
 
 
-    /* drag and drop file (!!! ne marche qu'avec un seul input !!!) */
-    function oDndFile(selector) {
-
-        // constructor
-        var alreadyUploaded = false;
-        var dndFile = document.getElementsByClassName(selector);
-
-        if(dndFile.length){
-            var that = this;
+    var oPB = new MP_progressBar.MP_progressBar('progress-bar');
 
 
-            // handle default value
-            this.setData = function(data64){
-                var data = atob(data64);
-                if(/^([^\r\n]*);([^\r\n;]+)$/gm.test(data)){
-                    console.log(data)
-                    var nbRow = (data.match(/[\r\n]/g) || []).length;
-                    dndTextarea.value = data64;
-                    var span = dndHolder.getElementsByTagName('span')[1];
-                    span.innerHTML = span.innerHTML.replace('%n', nbRow);
-                    dndHolder.className = 'form-control dndholder dndsuccess';
-                    alreadyUploaded = true;
-                }else{
-                    dndHolder.className = 'form-control dndholder dndbadformat';
-                }
+    var el = $('#tokenedit');
+    if(el.length){
+        var ote = new MP_tableAjax.MP_tableAjax(el, function(res){
+            console.log('cb' + ' - ' + JSON.stringify(res));
+            if(res.action == 'notif1_admin'){
+                oPB.updateBar('barValidated', res.value);
+            }else if(res.action == 'notif1'){
+                oPB.updateBar('barDone', res.value);
             }
-            // read file
-            this.readFile = function (file) {
-                var reader = new FileReader();
-                reader.onload = function (event){
-                    // check format
-                    var data64 = event.target.result.split('base64,')[1];
-                    that.setData(data64);
-                }
-                reader.readAsDataURL(file[0]);
-            }
-
-
-            // group element
-            dndFile = dndFile[0];
-
-            // find form and hidden input file
-            var dndForm = dndFile.parentElement;
-            var dndInputFile = null;
-            while(dndForm.tagName.toUpperCase() != 'FORM'){
-                if(dndInputFile == null && dndForm.className.indexOf('form-group') >= 0){
-                    dndInputFile = dndForm.getElementsByTagName('input')[0];
-                }
-                dndForm = dndForm.parentElement;
-            }
-
-            // drag and drop event
-            var dndHolder = dndFile.getElementsByClassName('dndholder')[0];
-            dndHolder.ondragover = function () {
-                if(!alreadyUploaded){
-                    this.className = 'form-control dndholder dndhover';
-                }
-                return false;
-            };
-            dndHolder.ondragend = function () {
-                if(!alreadyUploaded){
-                    this.className = 'form-control dndholder dnddefault';
-                }
-                return false;
-            };
-            dndHolder.ondragstart = function () {
-                if(!alreadyUploaded){
-                    this.className = 'form-control dndholder dndhover';
-                }
-                return false;
-            };
-            dndHolder.ondragleave = function () {
-                if(!alreadyUploaded){
-                    this.className = 'form-control dndholder dnddefault';
-                    return false;
-                }
-            };
-            dndHolder.ondrop = function (e) {
-                if(!alreadyUploaded){
-                    this.className = 'form-control dndholder dnddefault';
-                    e.preventDefault();
-                    that.readFile(e.dataTransfer.files);
-                }else{
-                    return false;
-                }
-            };
-            dndHolder.onclick = function(){
-                dndInputFile.click();
-            }
-
-            dndInputFile.onchange = function() {
-                that.readFile(this.files);
-            }
-
-            // find textarea
-            var dndTextarea = dndFile.getElementsByTagName('textarea')[0];
-            if(dndTextarea.value != ''){
-                this.setData(dndTextarea.value);
-            }
-
-            // on met rouge si required et vide
-            if(dndTextarea.required == true){
-                dndTextarea.required = false;
-                dndForm.onsubmit = function(){
-                    if(!alreadyUploaded){
-                        dndHolder.className = 'form-control dndholder dndrequired';
-                        return false;
-                    }
-                }
-            }
-        }
+        });
     }
-    var oDND = new oDndFile('dndFile');
 
 
 
+    /* bootstrap tooltype */
+    $('.mptooltype').tooltip();
 
 
 
-
-
-
-
+    var oMPF = new MP_feelings.MP_feelings('mpFields');
 
 
 
@@ -173,63 +84,6 @@ $(function () {
         }
     });
 
-
-
-
-
-    /**
-     * set progress bar width for animation
-     * @param selector
-     */
-    function oProgressBar(selector){
-
-        this.draw = function(el){
-
-            var w = Math.round(100*(el.getAttribute('aria-valuenow')/el.getAttribute('aria-valuemax'))*100)/100;
-            el.style.width = w+'%';
-            el.innerHTML = '<span>' + w + '%</span>';
-            el.parentElement.setAttribute('data-original-title', el.getAttribute('aria-valuenow') + '/' + el.getAttribute('aria-valuemax'));
-            if(w==100){
-                el.style.backgroundColor = '#5bcc36';
-            }else{
-                el.style.backgroundColor = '#337ab7';
-            }
-            if(w==0){
-                el.style.color = 'black';
-            }else{
-                el.style.color = 'black';
-            }
-
-        }
-
-
-
-        this.updateBar = function(id, i){
-            var el = document.getElementById(id);
-            el.setAttribute('aria-valuenow', parseInt(el.getAttribute('aria-valuenow')) + i);
-            this.draw(el);
-        }
-
-        // constructor
-        var pbs = document.getElementsByClassName(selector);
-        var i = 0;
-        while(i < pbs.length){
-            var pb = pbs[i];
-            this.draw(pb);
-            i++;
-        }
-
-    }
-    var oPB = new oProgressBar('progress-bar');
-
-
-
-
-
-
-
-    /* bootstrap tooltype */
-    $('.mptooltype').tooltip();
 
 
     // slider
@@ -253,150 +107,6 @@ $(function () {
             RS_upd_color(val, this.$fill, this.$range);
         }
     });
-
-
-
-
-
-
-
-
-
-
-
-    // mettre id talbeau puis callbakc pour mettre à jour les bars de prog
-    function ompTableAjax(tableDOM, cb){
-
-        tableDOM.find('input:text').change(function(){
-            var el = $(this);
-            var val = el.val();
-            var json = {value: val};
-
-            // get all table, tr,td and input data attributes
-            $.each(el.closest('table').data(), function(key, val) {
-                json[key]= val;
-            });
-            $.each(el.closest('tr').data(), function(key, val) {
-                json[key]= val;
-            });
-            $.each(el.closest('td').data(), function(key, val) {
-                json[key]= val;
-            });
-            $.each(el.data(), function(key, val) {
-                json[key]= val;
-            });
-
-            mpAjax(json.url, 'POST', json, function(err,res){
-                var colorBef = el.css('background-color');
-                if(!err){
-                    var color = res.error=='' ? 'green' : 'red';
-                    if(res.error!=''){
-                        alert(res.error);
-                    }
-
-                }else{
-                    var color = 'red';
-                }
-
-                el.css('background-color', color);
-                setTimeout(function(){
-                    el.css('background-color', colorBef)
-                }, 750);
-
-                // callback success
-                cb(res);
-
-            });
-        });
-    }
-
-    var el = $('#tokenedit');
-    if(el.length){
-        var ote = new ompTableAjax(el, function(res){
-            console.log('cb' + ' - ' + JSON.stringify(res));
-            if(res.action == 'notif1_admin'){
-                oPB.updateBar('barValidated', res.value);
-            }else if(res.action == 'notif1'){
-                oPB.updateBar('barDone', res.value);
-            }
-        });
-    }
-
-
-
-
-
-    /* !!! ne marche qu'avec un seul élément
-     * class pour gérer les interaction entre le form type Fields et le user
-     * en gros on click sur un label, ça coche/décoche la checkbox cachée
-     */
-    function ompFields(selector){
-
-        function getElPosition(child, parent, tag){
-            var children = parent.getElementsByTagName(tag);
-            var i =0;
-            while(i<children.length){
-                if(child == children[i]){
-                    return i;
-                }
-                i++;
-            }
-        }
-
-        var el = document.getElementsByClassName(selector);
-        if(el.length){
-            el = el[0];
-            var hiddenCBs = el.getElementsByTagName('option');
-            var ui = el.getElementsByClassName('mpFieldsUI')[0];
-            var labels = ui.getElementsByTagName('span');
-            var i = 0;
-            while(i<labels.length){
-                labels[i].onclick = function(){
-                    var n = getElPosition(this, ui, 'span');
-                    hiddenCBs[n].selected = !hiddenCBs[n].selected;
-                    this.className = hiddenCBs[n].selected ? 'badge badge-success' : 'badge badge-secondary';
-                }
-                i++;
-            }
-        }
-    }
-    var oMPF = new ompFields('mpFields');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /* ajax */
-    function mpAjax(url, method, json, cb){
-        $.ajax({
-            url: url,
-            data: json,
-            dataType: 'json',
-            method: method,
-            success: function(res){
-                cb(0,res);
-            },
-            error: function(res){
-                console.log('error '+res.status+' '+res.statusText);
-                console.log(res.responseText);
-                cb(1,res.responseText);
-            }
-        });
-    }
 
 
 

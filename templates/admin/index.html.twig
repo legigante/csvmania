@@ -46,12 +46,16 @@
                                 <span>{{ 'entity.Assignment.nb_fields'|trans }} : {{ row.nb_fields }}</span>
                             </div>
 
-                            <h5>{{ 'entity.Assignment.label'|trans }}</h5>
                             {% if row.0.assignments|length == 0 %}
                                 {{ 'list.none'|trans }}
                             {% else %}
                                 {% for assignment in row.0.assignments %}
-                                    <i class="fa fa-user {{ icones[assignment.status] }}" title="{{ ('entity.Assignment.status'~assignment.status)|trans }}"></i> {{ assignment.assignedTo.firstName }} {{ assignment.assignedTo.lastName }}<br />
+                                    <i class="fa fa-user {{ icones[assignment.status] }}" title="{{ ('entity.Assignment.status'~assignment.status)|trans }}"></i>
+                                    {{ assignment.assignedTo.firstName }} {{ assignment.assignedTo.lastName }}
+                                    <div class="progress progress-task mptooltype" data-toggle="tooltype">
+                                        <div id="barDone" class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="{{ nbAsnwer[assignment.id] }}" aria-valuemax="{{ row.nb_fields*row.nb_contents }}"></div>
+                                    </div>
+                                    <br />
                                 {% endfor %}
                             {% endif %}
 

@@ -1,85 +1,86 @@
-{% extends 'layouts/site.html.twig' %}
+{% extends 'layouts/admin.html.twig' %}
 
-{% block title %}{{ 'task.label'|trans }} {{ task.name }}{% endblock %}
+{% block title %}{{ 'entity.Task.label'|trans }} {{ task.name }}{% endblock %}
 
 {% block content %}
 
 
-    <div class="mpblock row">
-        <h4>Todo : </h4>
-        <div class="mpcontent">
-            <ul>
-                <li>Tout refaire : <span class="label label-info">todo</span></li>
-                <li>pouvoir modifier priorité : <span class="label label-info">todo</span></li>
-            </ul>
-        </div>
-    </div>
-
 
     <div class="mpblock row">
         <h4>{{ 'show.info_gen'|trans }}</h4>
-        <div class="mpcontent">
+        <div class="mpcontent" id="task-gen">
 
-            <h1><span>Tâche {{ task.name }}</span>
-                <div class="bars">
-                    <div class="progress progress-task mptooltype" data-toggle="tooltype" data-original-title="{{ '' }}/{{ contents|length }}">
-                        <div id="barDone" class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="{{ 0 }}" aria-valuemax="{{ contents|length }}">{{ (  (0/contents|length)*100)|round(2) }}%</div>
-                    </div>
-                    <span class="badge">Done</span>
-
-                    <div class="progress progress-task mptooltype" data-toggle="tooltype" data-original-title="{{ '' }}/{{ contents|length }}">
-                        <div id="barValidated" class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="{{ 0 }}" aria-valuemax="{{ contents|length }}">{{ (  (0/contents|length)*100)|round(2) }}%</div>
-                    </div>
-                    <span class="badge">Validated</span>
-                </div>
-            </h1>
-
+            <h2>
+                <span>Tâche {{ task.name }}</span>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <i class="fa fa-edit fa-clickme" title="{{ 'form.edit'|trans }}"></i>
+                {% endif %}
+            </h2>
             <div class="row">
                 <div class="col-md-6">
-                    <strong>{{ 'task.created_by'|trans }} : </strong>
-                    <span><i class="fa fa-user"></i> {{ task.createdBy.firstName }} {{ task.createdBy.lastName }} {{ 'entity.at'|trans }} <i class="fa fa-calendar"></i> {{ task.createdAt|date('Y-m-d h:i:s') }}</span>
+                    <strong>{{ 'entity.Task.created_by'|trans }} : </strong>
+                    <span><i class="fa fa-user"></i> {{ task.createdBy.firstName }} {{ task.createdBy.lastName }} <i class="fa fa-calendar"></i> {{ task.createdAt|date('Y-m-d h:i:s') }}</span>
                 </div>
                 <div class="col-md-6">
-                    <strong>{{ 'task.assigned_to'|trans }} : </strong>
-                    {% for assignment in assignments %}
-                        <span><i class="fa fa-user"></i> {{  assignment.assignedTo.firstName }} {{ assignment.assignedTo.lastName }} {{ 'entity.at'|trans }} <i class="fa fa-calendar"></i> {{ assignment.assignedAt|date('Y-m-d h:i:s') }}</span><br />
-                    {% endfor %}
+
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    <strong>{{ '' }} : </strong>
-                    <span><i class="fa fa-calendar"></i> {{ '' }}</span>
+
+                    <div class="mpRead">
+                        <div class="prio{{ task.deadline < "now"|date('Y-m-d') ? '1' : '0' }}">
+                            <i class="fa fa-calendar" ></i>
+                            <span>{{ 'entity.Task.deadline'|trans }} : {{ task.deadline|localizeddate('medium', 'none') }}</span>
+                        </div>
+                        <div class="prio{{ task.priority }}">
+                            <i class="fa fa-clock-o" ></i>
+                            <span>{{ 'entity.Task.priority'|trans }} : {{ ('entity.Task.priority'~task.priority)|trans }}</span>
+                        </div>
+                    </div>
+
+                    {{ form_start(form, {'action' : path('updAjax_task'), 'data-id' : task.id, 'attr':{'class':'mpWrite d-none'}}) }}
+
+                    {{ form_end(form) }}
+
                 </div>
                 <div class="col-md-6">
-                    <strong>{{ 'task.validated_by'|trans }} : </strong>
-                    <span><i class="fa fa-user"></i> {{ '' }} {{ '' }} {{ 'entity.at'|trans }} <i class="fa fa-calendar"></i> {{ '' }}</span>
+                    <div>
+                        <i class="fa fa-files-o" ></i>
+                        <span>{{ 'entity.Assignment.nb_contents'|trans }} : {{ task.contents|length }}</span>
+                    </div>
+                    <div>
+                        <i class="fa fa-columns" ></i>
+                        <span>{{ 'entity.Assignment.nb_fields'|trans }} : {{ task.fields|length }}</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="mpblock row">
-        <h4>{{ 'content.list'|trans }}</h4>
+        <h4>{{ 'entity.Answer.list'|trans }} <i onclick="console.log('todo');" class="fa fa-csv fa-clickme" title="{{ 'list.download'|trans }}"></i></h4>
         <div class="mpcontent">
             <table id="tokenedit" class="mpstandard mp-table-ajax" data-url="{{ path('token_edit') }}">
                 <thead>
                 <tr>
-                    <th>{{ 'token.name'|trans }}</th>
-                    <th>{{ 'token.google'|trans }}</th>
-                    <th>{{ 'token.input'|trans }}</th>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <th>{{ 'token.admin_comment'|trans }}</th>
-                    {% endif %}
+                    <th>{{ 'entity.Content.label'|trans }}</th>
+                    <th>{{ 'entity.Field.label'|trans }}</th>
+                    {% for assignment in task.assignments %}
+                        <th>
+                            <i class="fa fa-user {{ icones[assignment.status] }}" title="{{ ('entity.Assignment.status'~assignment.status)|trans }}"></i>
+                            {{ assignment.assignedTo.firstName }} {{ assignment.assignedTo.lastName }}
+                        </th>
+                    {% endfor %}
                 </tr>
                 </thead>
                 <tbody>
-                {% for content in contents %}
-                    <tr data-id="{{ content.id }}">
-                        <td>{{ content.message }}</td>
-                        <td><a target="_blank" href="#">todo google trad</a></td>
-                        {% for answer in content.answers %}
-                            <td data-prop="answer"><input type="text" value="{{ answer.id }}" /></td>
+                {% for row in tbl %}
+                    <tr data-content="{{ row.content_id }}" data-field="{{ row.field_id }}">
+                        <td>{{ row.content }}</td>
+                        <td>{{ row.feeling }}</td>
+                        {% for assignment in task.assignments %}
+                            <td data-obj="answer" data-assignment="{{ assignment.id }}" data-answer="{{ row['answer_id'~assignment.id] }}">{{ row['answer'~assignment.id] }}</td>
                         {% endfor %}
                     </tr>
                 {% endfor %}
@@ -87,6 +88,20 @@
             </table>
         </div>
     </div>
+
+
+    <div class="mpblock row">
+        <h4>Todo : </h4>
+        <div class="mpcontent">
+            <ul>
+                <li>refaire entete avec deadline et priority editable : <span class="label label-info">todo</span></li>
+                <li>refaire tableau avec filtre, tri, pagination : <span class="label label-info">todo</span></li>
+                <li>telecharger csv : <span class="label label-info">todo</span></li>
+            </ul>
+        </div>
+    </div>
+
+
 
 
 {% endblock %}

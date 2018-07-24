@@ -79,6 +79,8 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $validatedAssignments;
 
+
+
     public function __construct()
     {
         $this->created_tasks = new ArrayCollection();
@@ -359,6 +361,8 @@ class User implements AdvancedUserInterface, \Serializable
 
         return $this;
     }
+
+
 
 
 }

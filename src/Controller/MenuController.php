@@ -59,7 +59,7 @@ class MenuController extends Controller
 
         // on set cookie client et on redirige vers accueil
         $response = new Response('',307);
-        $response->headers->setCookie(new Cookie('locale', $code, strtotime('now + 60 minutes')));
+        $response->headers->setCookie(new Cookie('locale', $code, strtotime('now + 2 weeks')));
         $response->headers->set('location',$lastRoad);
         return $response;
 

@@ -2,7 +2,10 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('build/admin.css') }}">
+{% endblock %}
+
+{% block aaaaa %}
+<body class="adminbg">
 {% endblock %}
 
 {% block menu %}
@@ -19,5 +22,4 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('build/admin.js') }}"></script>
 {% endblock %}
